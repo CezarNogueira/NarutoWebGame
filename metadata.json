@@ -1,0 +1,8 @@
+{
+  "name": "Caminho Ninja RPG",
+  "description": "Um RPG de simulação ninja no universo de Naruto.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
