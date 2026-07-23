@@ -110,7 +110,7 @@ export const JUTSUS: Jutsu[] = [
   // --- Iniciais por classe ---
   {
     id: "j_swiftfist", name: "Punho Veloz", description: "Uma sequência rápida de golpes corpo a corpo.",
-    kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 8, power: 46, critBonus: 8,
+    kind: "attack", element: "Físico", scaling: "taijutsu", power: 15, critBonus: 8,
     scrollCost: 0, reqLevel: 1, starter: "Taijutsu",
   },
   {
@@ -125,50 +125,45 @@ export const JUTSUS: Jutsu[] = [
   },
   // --- Aprendíveis em pergaminhos ---
   {
-    id: "j_shadowclone", name: "Clones das Sombras", description: "Cria clones que aumentam seu dano por 3 turnos.",
-    kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 20, power: 0, buffTurns: 3, buffAmount: 0.5,
+    id: "j_shadowclone", name: "Clones das Sombras", description: "Cria clones que aumentam seu dano por 1 turno",
+    kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 40, power: 0, buffTurns: 1, buffAmount: 0.3,
     scrollCost: 2500, reqLevel: 4,
   },
   {
-    id: "j_hiddenlotus", name: "Lótus Escondida", description: "Golpe devastador que ignora parte da defesa.",
-    kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 24, power: 72, critBonus: 12,
-    scrollCost: 7000, reqLevel: 10,
+    id: "j_hiddenlotus", name: "Lótus Principal", description: "Golpe devastador que ignora parte da defesa",
+    kind: "attack", element: "Físico", scaling: "taijutsu", power: 45, critBonus: 12,
+    scrollCost: 18000, reqLevel: 10,
   },
   {
-    id: "j_illusionprison", name: "Prisão Ilusória", description: "Aprisiona o alvo numa ilusão sufocante e precisa.",
-    kind: "attack", element: "Ilusão", scaling: "genjutsu", chakraCost: 22, power: 70,
-    scrollCost: 7000, reqLevel: 10,
+    id: "j_illusionprison", name: "Prisão Ilusória", description: "Aprisiona o alvo numa ilusão sufocante",
+    kind: "attack", element: "Ilusão", scaling: "genjutsu", chakraCost: 25, power: 50,
+    scrollCost: 17000, reqLevel: 12,
   },
   {
-    id: "j_waterdragon", name: "Dragão d'Água", description: "Invoca um dragão de água que esmaga o inimigo.",
-    kind: "attack", element: "Água", scaling: "ninjutsu", chakraCost: 26, power: 74,
-    scrollCost: 9000, reqLevel: 13,
+    id: "j_waterdragon", name: "Dragão d'Água", description: "Invoca um dragão de água que esmaga o inimigo",
+    kind: "attack", element: "Água", scaling: "ninjutsu", chakraCost: 30, power: 60,
+    scrollCost: 19000, reqLevel: 13,
   },
   {
-    id: "j_mysticheal", name: "Cura Mística Suprema", description: "Restaura grande parte da sua vida.",
-    kind: "heal", element: "Cura", scaling: "kenjutsu", chakraCost: 30, power: 0, healPercent: 0.6,
-    scrollCost: 8000, reqLevel: 12,
+    id: "j_mysticheal", name: "Cura Mística Suprema", description: "Restaura grande parte da sua vida",
+    kind: "heal", element: "Cura", scaling: "ninjutsu", chakraCost: 40, power: 0, healPercent: 0.6,
+    scrollCost: 18000, reqLevel: 12,
   },
   {
-    id: "j_spiralsphere", name: "Esfera Espiral", description: "Uma esfera giratória de chakra puro e concentrado.",
-    kind: "attack", element: "Vento", scaling: "ninjutsu", chakraCost: 34, power: 86, critBonus: 6,
-    scrollCost: 15000, reqLevel: 20,
+    id: "j_spiralsphere", name: "Esfera Espiral", description: "Uma esfera giratória de chakra puro e concentrado",
+    kind: "attack", element: "Vento", scaling: "ninjutsu", chakraCost: 65, power: 80, critBonus: 6,
+    scrollCost: 95000, reqLevel: 20,
   },
   {
-    id: "j_lightningblade", name: "Lâmina Relâmpago", description: "Um golpe perfurante à velocidade do raio. Crítico altíssimo.",
+    id: "j_lightningblade", name: "Kirin", description: "Grande Dragão de raio em meio a tempestade",
     kind: "attack", element: "Raio", scaling: "speed", chakraCost: 34, power: 80, critBonus: 30,
     scrollCost: 15000, reqLevel: 20,
   },
   {
-    id: "j_earthquake", name: "Fenda Sísmica", description: "Rasga a terra sob os pés do inimigo.",
-    kind: "attack", element: "Terra", scaling: "stamina", chakraCost: 28, power: 76,
-    scrollCost: 11000, reqLevel: 16,
-  },
-  {
-    id: "j_sagemode", name: "Modo Sábio", description: "Absorve energia natural. Dano brutalmente aumentado por 3 turnos.",
-    kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 45, power: 0, buffTurns: 3, buffAmount: 0.9,
-    scrollCost: 45000, reqLevel: 40,
-  },
+    id: "j_earthquake", name: "Fenda Sísmica", description: "Rasga a terra sob os pés do inimigo",
+    kind: "attack", element: "Terra", scaling: "stamina", chakraCost: 40, power: 60,
+    scrollCost: 20000, reqLevel: 16,
+  }
 ];
 
 export const getStarterJutsu = (ninjaClass: ClassType, nature: import("./types").Nature): string => {
