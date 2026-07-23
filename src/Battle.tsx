@@ -17,6 +17,8 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const [pHp, setPHp] = useState(ninja.health);
   const [tempShield, setTempShield] = useState(0);
   const [pChakra, setPChakra] = useState(ninja.chakra);
+  const [pVigor, setPVigor] = useState(ninja.vigor);
+  const isLee = ninja.clan === "Lee";
   const [eHp, setEHp] = useState(enemy.maxHp);
   const [boostTurns, setBoostTurns] = useState(0);
   const [boostAmt, setBoostAmt] = useState(0);
@@ -37,9 +39,9 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const addLog = (t: string, k: "you" | "foe" | "info") =>
     setLog((prev) => [{ id: Date.now() + Math.random(), t, k }, ...prev].slice(0, 8));
 
-  const finish = (result: "win" | "lose" | "flee", hp: number, chakra: number, items: Record<string, number>) => {
+  const finish = (result: "win" | "lose" | "flee", hp: number, chakra: number, vigor: number, items: Record<string, number>) => {
     setPhase("over");
-    setOutcome({ result, health: Math.max(0, Math.round(hp)), chakra: Math.round(chakra), usedItems: items });
+    setOutcome({ result, health: Math.max(0, Math.round(hp)), chakra: Math.round(chakra), vigor: Math.round(vigor), usedItems: items });
   };
 
   // ---- dano do jogador ----
@@ -71,13 +73,13 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     return { dmg: Math.max(1, Math.round(dmg)), crit };
   };
 
-  const afterPlayer = (newEHp: number, snapHp: number, snapChakra: number, snapItems: Record<string, number>) => {
+  const afterPlayer = (newEHp: number, snapHp: number, snapChakra: number, snapVigor: number, snapItems: Record<string, number>) => {
     setShake("foe");
     setTimeout(() => setShake(""), 300);
     if (newEHp <= 0) {
       setEHp(0);
       addLog(`${enemy.name} foi derrotado!`, "you");
-      setTimeout(() => finish("win", snapHp, snapChakra, snapItems), 500);
+      setTimeout(() => finish("win", snapHp, snapChakra, snapVigor, snapItems), 500);
       return;
     }
     setEHp(newEHp);
@@ -94,7 +96,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       if (newTimer <= 0) {
         setPHp(1);
         addLog("O efeito do Oitavo Portão terminou! Sua força vital se esgotou.", "info");
-        setTimeout(() => finish("lose", 1, snapChakra, snapItems), 1000);
+        setTimeout(() => finish("lose", 1, snapChakra, snapVigor, snapItems), 1000);
         return;
       }
     }
@@ -108,11 +110,11 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     }
 
     setPhase("enemy");
-    setTimeout(() => enemyTurn(snapHp, snapChakra, snapItems), 800);
+    setTimeout(() => enemyTurn(snapHp, snapChakra, snapVigor, snapItems), 800);
   };
 
   // ---- turno do inimigo ----
-  const enemyTurn = (snapHp: number, snapChakra: number, snapItems: Record<string, number>) => {
+  const enemyTurn = (snapHp: number, snapChakra: number, snapVigor: number, snapItems: Record<string, number>) => {
     const healMove = enemy.moves.find((m) => m.heal);
     let move = enemy.moves[Math.floor(Math.random() * enemy.moves.length)];
     if (healMove && eHp < enemy.maxHp * 0.5 && Math.random() < 0.6) move = healMove;
@@ -141,7 +143,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
 
     if (newHp <= 0) {
       addLog(`Você caiu em combate...`, "info");
-      setTimeout(() => finish("lose", 0, snapChakra, snapItems), 500);
+      setTimeout(() => finish("lose", 0, snapChakra, snapVigor, snapItems), 500);
       return;
     }
     setPhase("player");
@@ -154,13 +156,17 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     setPhase("enemy");
     const { dmg, crit } = calcPlayerDamage("taijutsu", 42, 6);
     addLog(`Você atacou${crit ? " (CRÍTICO!)" : ""} e causou ${dmg} de dano.`, "you");
-    afterPlayer(eHp - dmg, pHp, pChakra, usedItems);
+    afterPlayer(eHp - dmg, pHp, pChakra, pVigor, usedItems);
   };
 
   const useJutsu = (j: Jutsu) => {
     if (phase !== "player") return;
-    if (pChakra < j.chakraCost) {
-      addLog(`Chakra insuficiente para ${j.name}.`, "info");
+
+    const resource = isLee ? pVigor : pChakra;
+    const cost = j.chakraCost ?? 0;
+
+    if (resource < cost) {
+      addLog(`${isLee ? "Vigor" : "Chakra"} insuficiente para ${j.name}.`, "info");
       return;
     }
     
@@ -177,8 +183,11 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
 
     setPhase("enemy");
     setMenu("root");
-    const newChakra = pChakra - j.chakraCost;
-    setPChakra(newChakra);
+    const newResource = resource - cost;
+    const newChakra = isLee ? pChakra : newResource;
+    const newVigor = isLee ? newResource : pVigor;
+    if (isLee) setPVigor(newVigor);
+    else setPChakra(newChakra);
 
     if (j.defense && j.defense > 0) {
       setTempShield(j.defense);
@@ -188,7 +197,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       const turns = j.paralyzeTurns ?? 2;
       setParalyzeTurns(turns);
       addLog(`Você usou ${j.name}! O inimigo ficará paralisado por ${turns} turnos.`, "you");
-      afterPlayer(eHp, currentHp, newChakra, usedItems);
+      afterPlayer(eHp, currentHp, newChakra, newVigor, usedItems);
       return;
     }
 
@@ -198,7 +207,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       setPHp(currentHp);
       addLog(`Você usou ${j.name} e recuperou ${heal} de vida.`, "you");
       setPhase("enemy");
-      setTimeout(() => enemyTurn(currentHp, newChakra, usedItems), 800);
+      setTimeout(() => enemyTurn(currentHp, newChakra, newVigor, usedItems), 800);
       return;
     }
     
@@ -223,13 +232,13 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       }
       
       setPhase("enemy");
-      setTimeout(() => enemyTurn(currentHp, newChakra, usedItems), 800);
+      setTimeout(() => enemyTurn(currentHp, newChakra, newVigor, usedItems), 800);
       return;
     }
     // attack
     const { dmg, crit } = calcPlayerDamage(j.scaling, j.power, j.critBonus ?? 0);
     addLog(`Você usou ${j.name}${crit ? " (CRÍTICO!)" : ""} e causou ${dmg} de dano.`, "you");
-    afterPlayer(eHp - dmg, currentHp, newChakra, usedItems);
+    afterPlayer(eHp - dmg, currentHp, newChakra, newVigor, usedItems);
   };
 
   const useItem = (itemId: string) => {
@@ -246,23 +255,31 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
 
     let newHp = pHp;
     let newChakra = pChakra;
+    let newVigor = pVigor;
     if (item.fullRestore) {
       newHp = ninjaObj.getMaxHealth();
       newChakra = ninjaObj.getMaxChakra();
-      addLog(`Você usou ${item.name}. Vida e Chakra restaurados!`, "you");
+      newVigor = ninjaObj.getMaxVigor();
+      addLog(`Você usou ${item.name}. Vida e ${isLee ? "Vigor" : "Chakra"} restaurados!`, "you");
     } else {
       if (item.healAmount) {
         newHp = Math.min(ninjaObj.getMaxHealth(), pHp + item.healAmount);
         addLog(`Você usou ${item.name} e recuperou ${item.healAmount} de vida.`, "you");
       }
       if (item.chakraAmount) {
-        newChakra = Math.min(ninjaObj.getMaxChakra(), pChakra + item.chakraAmount);
-        addLog(`Você usou ${item.name} e recuperou ${item.chakraAmount} de chakra.`, "you");
+        if (isLee) {
+          newVigor = Math.min(ninjaObj.getMaxVigor(), pVigor + item.chakraAmount);
+          addLog(`Você usou ${item.name} e recuperou ${item.chakraAmount} de vigor.`, "you");
+        } else {
+          newChakra = Math.min(ninjaObj.getMaxChakra(), pChakra + item.chakraAmount);
+          addLog(`Você usou ${item.name} e recuperou ${item.chakraAmount} de chakra.`, "you");
+        }
       }
     }
     setPHp(newHp);
     setPChakra(newChakra);
-    setTimeout(() => enemyTurn(newHp, newChakra, newUsed), 800);
+    setPVigor(newVigor);
+    setTimeout(() => enemyTurn(newHp, newChakra, newVigor, newUsed), 800);
   };
 
   const flee = () => {
@@ -270,11 +287,11 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     const chance = Math.min(90, 40 + (ninjaObj.getSpeedStat() - enemy.speed) * 2);
     if (Math.random() * 100 < chance) {
       addLog("Você conseguiu escapar da batalha!", "info");
-      setTimeout(() => finish("flee", pHp, pChakra, usedItems), 400);
+      setTimeout(() => finish("flee", pHp, pChakra, pVigor, usedItems), 400);
     } else {
       addLog("Falha na fuga!", "info");
       setPhase("enemy");
-      setTimeout(() => enemyTurn(pHp, pChakra, usedItems), 700);
+      setTimeout(() => enemyTurn(pHp, pChakra, pVigor, usedItems), 700);
     }
   };
 
@@ -303,7 +320,11 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
                 <span className="text-neutral-400">Nv {ninja.level}</span>
               </div>
               <Bar value={pHp} max={ninjaObj.getMaxHealth()} color="bg-green-500" icon={<Heart className="w-3 h-3 text-green-400" />} />
-              <Bar value={pChakra} max={ninjaObj.getMaxChakra()} color="bg-blue-500" icon={<Zap className="w-3 h-3 text-blue-400" />} />
+              {isLee ? (
+                <Bar value={pVigor} max={ninjaObj.getMaxVigor()} color="bg-orange-500" icon={<Zap className="w-3 h-3 text-orange-400" />} />
+              ) : (
+                <Bar value={pChakra} max={ninjaObj.getMaxChakra()} color="bg-blue-500" icon={<Zap className="w-3 h-3 text-blue-400" />} />
+              )}
               {boostTurns > 0 && (
                 <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
                   <ShieldCheck className="w-3 h-3" /> Dano +{Math.round(boostAmt * 100)}% ({boostTurns})
@@ -359,13 +380,16 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
                 {knownJutsus.map((j) => (
                   <button
                     key={j.id}
-                    disabled={phase !== "player" || pChakra < j.chakraCost}
+                    disabled={
+                      phase !== "player" ||
+                      (isLee ? pVigor : pChakra) < (j.chakraCost ?? 0)
+                    }
                     onClick={() => useJutsu(j)}
                     className="text-left p-3 rounded-lg border border-neutral-700 bg-neutral-800 hover:border-red-500 disabled:opacity-40 disabled:hover:border-neutral-700 transition-colors"
                   >
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-sm">{j.name}</span>
-                      <span className="text-[10px] text-blue-400 font-bold">{j.chakraCost} CK</span>
+                      <span className={`text-[10px] font-bold ${isLee ? "text-orange-400" : "text-blue-400"}`}>{j.chakraCost} {isLee ? "VG" : "CK"}</span>
                     </div>
                     <div className="text-[11px] text-neutral-400">{j.element} · {j.kind === "attack" ? `Poder ${j.power}` : j.kind === "heal" ? "Cura" : "Buff"}</div>
                   </button>

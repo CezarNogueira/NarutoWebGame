@@ -180,6 +180,7 @@ export function useGame() {
     setActiveMission(null);
     ninja.data.health = Math.max(0, outcome.health);
     ninja.data.chakra = Math.max(0, outcome.chakra);
+    ninja.data.vigor = Math.max(0, outcome.vigor);
     
     for (const [id, qty] of Object.entries(outcome.usedItems)) {
       if (qty > 0) ninja.data.inventory[id] = qty;

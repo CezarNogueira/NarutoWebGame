@@ -43,8 +43,8 @@ export const JUTSUS: Jutsu[] = [
   { id: "j_hyuga_rotacao", name: "Rotação Celestial", description: "Defesa e ataque absolutos.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 40, power: 40, defense: 40, scrollCost: -1, reqLevel: 30 },
   { id: "j_uzumaki_correntes", name: "Correntes de Chakra", description: "Prende o oponente.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 30, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 10 },
   { id: "j_uzumaki_selamento", name: "Selamento Uzumaki", description: "Bloqueia jutsus do inimigo.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 50, power: 0, paralyzeTurns: 4, scrollCost: -1, reqLevel: 30 },
-  { id: "j_lee_lotus1", name: "Lótus Primária", description: "Ataque devastador de Taijutsu.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 0, power: 40, scrollCost: -1, reqLevel: 10 },
-  { id: "j_lee_lotus2", name: "Lótus Oculta", description: "Ataque ainda mais devastador.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 0, power: 80, scrollCost: -1, reqLevel: 20 },
+  { id: "j_lee_lotus1", name: "Lótus Primária", description: "Ataque devastador de Taijutsu.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 40, scrollCost: -1, reqLevel: 10 },
+  { id: "j_lee_lotus2", name: "Lótus Oculta", description: "Ataque ainda mais devastador.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 40, power: 80, scrollCost: -1, reqLevel: 20 },
 
 
   // Kenjutsu

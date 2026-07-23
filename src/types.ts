@@ -130,6 +130,7 @@ export type BattleOutcome = {
   result: "win" | "lose" | "flee";
   health: number;
   chakra: number;
+  vigor: number;
   usedItems: Record<string, number>;
 };
 
