@@ -58,7 +58,7 @@ export function useGame() {
   };
 
   const eatRamen = () => {
-    
+    if (!ninja) return; 
     if (ninja.data.ryo < 150) return addLog("Dinheiro insuficiente.", "danger");
     const isLee = ninja.data.clan === "Lee";
     const secondaryFull = isLee ? ninja.data.vigor === ninja.getMaxVigor() : ninja.data.chakra === ninja.getMaxChakra();

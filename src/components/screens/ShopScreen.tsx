@@ -27,7 +27,7 @@ export function ShopScreen() {
             return (
               <div key={item.id} className="bg-neutral-950 p-4 rounded-xl border border-neutral-800 flex justify-between items-center gap-3">
                 <div>
-                  <div className="font-bold text-sm">{item.name} {item.qtyPerPurchase && item.qtyPerPurchase > 1 ? `(x${item.qtyPerPurchase})` : ""}</div>
+                  <div className="font-bold text-sm">{item.name}</div>
                   <div className="text-[11px] text-neutral-400 mt-0.5">{item.description}</div>
                 </div>
                 <button

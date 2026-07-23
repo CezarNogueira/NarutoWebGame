@@ -185,10 +185,10 @@ export const getStarterJutsu = (ninjaClass: ClassType, nature: import("./types")
 // ------------------------------------------------------------------
 export const ITEMS: Item[] = [
 
-  { id: "w_katana", name: "Katana", description: "Arma branca afiada (Ataque 24, 20 usos).", price: 2500, kind: "weapon", weaponPower: 24, qtyPerPurchase: 20 },
-  { id: "w_kunai", name: "Kunai", description: "Lâmina arremessável (Ataque 14, 3 usos).", price: 300, kind: "weapon", weaponPower: 14, qtyPerPurchase: 3 },
-  { id: "w_shuriken", name: "Shurikens", description: "Lâminas giratórias (Ataque 9, 1 uso).", price: 50, kind: "weapon", weaponPower: 9, qtyPerPurchase: 1 },
-  { id: "w_fuuma", name: "Fuuma Shuriken", description: "Shuriken de Vento Demoníaco (Ataque 30, 1 uso).", price: 1200, kind: "weapon", weaponPower: 30, qtyPerPurchase: 1 },
+  { id: "w_katana", name: "Katana", description: "Arma branca afiada (Poder 34, 20 usos)", price: 7500, kind: "weapon", weaponPower: 34, qtyPerPurchase: 20 },
+  { id: "w_kunai", name: "Kunai", description: "Lâmina arremessável (Poder 14, 3 usos)", price: 300, kind: "weapon", weaponPower: 14, qtyPerPurchase: 3 },
+  { id: "w_shuriken", name: "Shurikens", description: "Lâminas giratórias (Poder 9, 1 uso)", price: 50, kind: "weapon", weaponPower: 9, qtyPerPurchase: 1 },
+  { id: "w_fuuma", name: "Fuuma Shuriken", description: "Shuriken de Vento Demoníaco (Poder 30, 1 uso)", price: 1200, kind: "weapon", weaponPower: 30, qtyPerPurchase: 1 },
 
   { id: "kit_medico", name: "Kit Médico", description: "Restaura 60 de Vida. Usável em batalha.", price: 300, kind: "consumable", healAmount: 60, usableInBattle: true },
   { id: "pilula_soldado", name: "Pílula do Soldado", description: "Restaura 50 de Chakra. Usável em batalha.", price: 350, kind: "consumable", chakraAmount: 50, usableInBattle: true },
