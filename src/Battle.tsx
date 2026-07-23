@@ -23,6 +23,9 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const [boostTurns, setBoostTurns] = useState(0);
   const [boostAmt, setBoostAmt] = useState(0);
   const [paralyzeTurns, setParalyzeTurns] = useState(0);
+  const [pParalyzeTurns, setPParalyzeTurns] = useState(0);
+  const [eBoostTurns, setEBoostTurns] = useState(0);
+  const [eBoostAmt, setEBoostAmt] = useState(0);
   const [deathTimer, setDeathTimer] = useState<number | null>(null);
   const [inv, setInv] = useState<Record<string, number>>({ ...ninja.inventory });
   const [usedItems, setUsedItems] = useState<Record<string, number>>({});
@@ -34,7 +37,7 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const [shake, setShake] = useState<"" | "foe" | "you">("");
   const [outcome, setOutcome] = useState<BattleOutcome | null>(null);
 
-  const playerDefense = Math.round(ninjaObj.getTaijutsuStat() * 0.12 + ninja.stats.stamina * 0.32 + ninja.level * 1.2);
+  const playerDefense = Math.round(ninjaObj.getTaijutsuStat() * 0.12 + ninja.level * 1.2) + Math.floor(ninja.stats.stamina / 5);
 
   const addLog = (t: string, k: "you" | "foe" | "info") =>
     setLog((prev) => [{ id: Date.now() + Math.random(), t, k }, ...prev].slice(0, 8));
@@ -104,11 +107,24 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     if (paralyzeTurns > 0) {
       setParalyzeTurns(t => t - 1);
       addLog(`${enemy.name} está paralisado!`, "info");
+      // Check if player is paralyzed before passing turn
+      if (pParalyzeTurns > 0) {
+        setPParalyzeTurns(t => t - 1);
+        addLog(`Você está paralisado e perdeu a vez!`, "info");
+        setTimeout(() => enemyTurn(snapHp, snapChakra, snapVigor, snapItems), 800);
+        return;
+      }
       setPhase("player");
       setMenu("root");
       return;
     }
 
+    if (pParalyzeTurns > 0) {
+      setPParalyzeTurns(t => t - 1);
+      addLog(`Você está paralisado e perdeu a vez!`, "info");
+      setTimeout(() => enemyTurn(snapHp, snapChakra, snapVigor, snapItems), 800);
+      return;
+    }
     setPhase("enemy");
     setTimeout(() => enemyTurn(snapHp, snapChakra, snapVigor, snapItems), 800);
   };
@@ -127,7 +143,28 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       return;
     }
 
+    if (eBoostTurns > 0) {
+      setEBoostTurns(t => t - 1);
+    }
+    
+    if (move.buffAmount) {
+      setEBoostAmt(move.buffAmount);
+      setEBoostTurns(move.buffTurns || 3);
+      addLog(`${enemy.name} usou ${move.name} e aumentou seu dano!`, "foe");
+      setPhase("player");
+      setMenu("root");
+      return;
+    }
+    if (move.paralyzeTurns) {
+      setPParalyzeTurns(move.paralyzeTurns);
+      addLog(`${enemy.name} usou ${move.name}! Você ficará paralisado por ${move.paralyzeTurns} turnos.`, "foe");
+      setPhase("player");
+      setMenu("root");
+      return;
+    }
+
     let dmg = move.power * variance() - playerDefense - tempShield;
+    if (eBoostTurns > 0) dmg *= (1 + eBoostAmt);
     if (tempShield > 0) {
       addLog(`Seu escudo bloqueou parte do dano!`, `info`);
       setTempShield(0);
@@ -335,9 +372,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
 
           {/* Inimigo */}
           <motion.div animate={shake === "foe" ? { x: [0, 8, -8, 6, 0] } : {}} transition={{ duration: 0.3 }} className="flex flex-col items-center">
-            <div className="w-[92px] h-[92px] rounded-2xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-5xl drop-shadow-lg">
-              {enemy.emoji}
-            </div>
+            {enemy.avatarId ? <NinjaAvatar id={enemy.avatarId} size={92} className="rounded-2xl drop-shadow-lg" /> : <div className="w-[92px] h-[92px] rounded-2xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-5xl drop-shadow-lg">{enemy.emoji}</div>}
             <div className="mt-3 w-full">
               <div className="flex justify-between text-xs mb-1">
                 <span className="font-bold text-red-300">{enemy.name}</span>

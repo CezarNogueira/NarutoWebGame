@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Ninja as NinjaModel } from "../models/Ninja";
 import { GameManager } from "../services/GameManager";
+import { CHUNIN_EXAM_ENEMIES } from "../data";
 import { LogEntry, Screen, Village, ClassType, Nature, Clan, Jutsu, Item, Mission, BattleOutcome } from "../types";
 import { MASTERS, JUTSUS } from "../data";
 
@@ -57,7 +58,7 @@ export function useGame() {
   };
 
   const eatRamen = () => {
-    if (!ninja) return;
+    
     if (ninja.data.ryo < 150) return addLog("Dinheiro insuficiente.", "danger");
     const isLee = ninja.data.clan === "Lee";
     const secondaryFull = isLee ? ninja.data.vigor === ninja.getMaxVigor() : ninja.data.chakra === ninja.getMaxChakra();
@@ -137,8 +138,25 @@ export function useGame() {
     if (!info) return addLog("Você já atingiu o rank máximo!", "info");
     
     if (ninja.canTakeExam()) {
+      if (info.nextRank === "Chunin") {
+        addLog("O Exame Chunin começou! Prepare-se para 5 batalhas consecutivas.", "info");
+        const e = CHUNIN_EXAM_ENEMIES[Math.floor(Math.random() * CHUNIN_EXAM_ENEMIES.length)];
+        setActiveMission({
+          id: "chunin_exam_1",
+          name: "Exame Chunin (1/5)",
+          rank: "Sem Rank",
+          description: "Sobreviva a 5 batalhas.",
+          reward: 0,
+          xpReward: 0,
+          recommendedLevel: 10,
+          enemy: e
+        });
+        return;
+      }
+      
       ninja.promote();
       addLog(`Parabéns! Você foi promovido para ${info.nextRank}!`, "success");
+      addLog("Seus treinos no Campo de Treinamento agora concedem mais atributos e XP!", "info");
       setNinja(ninja);
     } else {
       addLog("Você não cumpre os requisitos para o exame.", "danger");
@@ -147,6 +165,7 @@ export function useGame() {
 
   const trainStat = (statKey: keyof NinjaModel["data"]["stats"], statName: string, duration: number, levelReq: number, staminaCost: number) => {
     if (!ninja) return;
+    if (ninja.data.trainedToday) return addLog("Você já treinou hoje. Conclua uma missão para avançar o dia.", "danger");
     if (ninja.data.level < levelReq) return addLog(`Requer nível ${levelReq}`, "danger");
     if (ninja.data.stats.stamina < staminaCost) return addLog(`Stamina insuficiente (${staminaCost})`, "danger");
 
@@ -158,18 +177,27 @@ export function useGame() {
       if (ninja.data.chakra < 30) return addLog("Chakra insuficiente para treinar.", "danger");
       ninja.data.chakra -= 30;
     }
-    ninja.data.stats[statKey] += 1;
-    const xpGain = duration * 2;
+    let statGain = 1;
+    let xpGain = duration * 2;
+    switch (ninja.data.rank) {
+      case "Genin": statGain = 3; xpGain = 100; break;
+      case "Chunin": statGain = 5; xpGain = 250; break;
+      case "Jonin": statGain = 10; xpGain = 500; break;
+      case "ANBU": statGain = 20; xpGain = 1000; break;
+      case "Kage": statGain = 50; xpGain = 5000; break;
+    }
+
+    ninja.data.stats[statKey] += statGain;
+    ninja.data.trainedToday = true;
     const leveledUp = ninja.addXp(xpGain);
     
-    addLog(`Você treinou ${statName} (+1) e ganhou ${xpGain} XP!`, "info");
+    addLog(`Você treinou ${statName} (+${statGain}) e ganhou ${xpGain} XP!`, "info");
     if (leveledUp) {
       addLog(`Nível UP! Você atingiu o nível ${ninja.data.level}.`, "success");
       const newJutsus = ninja.autoLearnNatureJutsus();
       newJutsus.forEach(j => addLog(`Você despertou um novo Jutsu: ${j}!`, "success"));
     }
     
-    ninja.data.day++;
     setNinja(ninja);
   };
 
@@ -178,6 +206,10 @@ export function useGame() {
     if (!mission) return;
     if (!ninja) return;
     setActiveMission(null);
+    if (!mission.id.startsWith("chunin_exam_") || outcome.result !== "win" || (outcome.result === "win" && mission.id === "chunin_exam_5")) {
+      ninja.data.day++;
+      ninja.data.trainedToday = false;
+    }
     ninja.data.health = Math.max(0, outcome.health);
     ninja.data.chakra = Math.max(0, outcome.chakra);
     ninja.data.vigor = Math.max(0, outcome.vigor);
@@ -188,6 +220,29 @@ export function useGame() {
     }
     
     if (outcome.result === "win") {
+      if (mission.id.startsWith("chunin_exam_")) {
+        const currentBattle = parseInt(mission.id.split("_")[2]);
+        if (currentBattle < 5) {
+           const e = CHUNIN_EXAM_ENEMIES[Math.floor(Math.random() * CHUNIN_EXAM_ENEMIES.length)];
+           addLog(`Batalha ${currentBattle} vencida! Prepare-se para a próxima!`, "success");
+           setTimeout(() => {
+             setActiveMission({
+               ...mission,
+               id: `chunin_exam_${currentBattle + 1}`,
+               name: `Exame Chunin (${currentBattle + 1}/5)`,
+               enemy: e
+             });
+           }, 500);
+           setNinja(ninja);
+           return;
+        } else {
+           ninja.promote();
+           addLog(`Parabéns! Você completou as 5 batalhas e foi promovido para Chunin!`, "success");
+           addLog("Seus treinos no Campo de Treinamento agora concedem mais atributos e XP!", "info");
+           setNinja(ninja);
+           return;
+        }
+      }
       ninja.data.missionsCompleted[mission.rank]++;
       ninja.data.ryo += mission.reward;
       const leveledUp = ninja.addXp(mission.xpReward);

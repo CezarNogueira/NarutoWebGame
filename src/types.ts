@@ -71,11 +71,15 @@ export type EnemyMove = {
   power: number;
   element: Element;
   heal?: number;
+  paralyzeTurns?: number;
+  buffAmount?: number;
+  buffTurns?: number;
 };
 
 export type Enemy = {
   name: string;
   emoji: string;
+  avatarId?: string;
   maxHp: number;
   attack: number;
   defense: number;
@@ -124,6 +128,7 @@ export type Ninja = {
   perks: string[]; // passivas (ex: nature_fogo, ninjutsu_kenjutsu)
   master?: string | null; // id do mestre
   day: number;
+  trainedToday?: boolean;
 };
 
 export type BattleOutcome = {

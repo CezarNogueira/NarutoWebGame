@@ -1,4 +1,4 @@
-import { Mission, Village, ClassType, Stats, Jutsu, Item } from "./types";
+import { Mission, Village, ClassType, Stats, Jutsu, Item, Enemy } from "./types";
 
 
 export const CLANS: { name: string, description: string }[] = [
@@ -195,7 +195,7 @@ export const ITEMS: Item[] = [
   { id: "pilula_militar", name: "Pílula Militar", description: "Restaura Vida e Chakra completos. Usável em batalha.", price: 1400, kind: "consumable", fullRestore: true, usableInBattle: true },
 
   { id: "sandalias_ninja", name: "Sandálias Ninja", description: "+8 de Velocidade permanente.", price: 3500, kind: "gear", statBoost: { stat: "speed", value: 8 } },
-  { id: "faixas_treino", name: "Faixas de Treino", description: "+8 de Fôlego permanente.", price: 3000, kind: "gear", statBoost: { stat: "stamina", value: 8 } },
+  { id: "faixas_treino", name: "Faixas de Treino", description: "+8 de Resistência permanente.", price: 3000, kind: "gear", statBoost: { stat: "stamina", value: 8 } },
   { id: "espada_basica", name: "Espada Básica", description: "+8 de Kenjutsu permanente.", price: 3500, kind: "gear", statBoost: { stat: "kenjutsu", value: 8 } },
   { id: "luvas_peso", name: "Luvas de Peso", description: "+8 de Taijutsu permanente.", price: 4000, kind: "gear", statBoost: { stat: "taijutsu", value: 8 } },
   { id: "pergaminho_elemental", name: "Pergaminho Elemental", description: "+8 de Ninjutsu permanente.", price: 4000, kind: "gear", statBoost: { stat: "ninjutsu", value: 8 } },
@@ -484,6 +484,152 @@ export const MASTERS: Master[] = [
     teaches: [
       { type: "jutsu", id: "j_petals", name: "Genjutsu das Pétalas", reqLevel: 12 },
       { type: "perk", id: "contra_genjutsu", name: "Contra Genjutsu", reqLevel: 28 }
+    ]
+  }
+];
+
+export const CHUNIN_EXAM_ENEMIES: Enemy[] = [
+  {
+    name: "Akira Uchiha",
+    emoji: "🔥",
+    avatarId: "m1",
+    maxHp: 240,
+    attack: 25,
+    defense: 12,
+    speed: 30,
+    moves: [
+      { name: "Corte com Kunai", power: 12, element: "Físico" },
+      { name: "Grande Bola de Fogo", power: 25, element: "Fogo" },
+      { name: "Chute Giratório", power: 15, element: "Físico" },
+      { name: "Sharingan", power: 0, element: "Físico", buffAmount: 0.15, buffTurns: 15 }
+    ]
+  },
+  {
+    name: "Daichi Senju",
+    emoji: "🌳",
+    avatarId: "m2",
+    maxHp: 275,
+    attack: 20,
+    defense: 18,
+    speed: 25,
+    moves: [
+      { name: "Soco Pesado", power: 16, element: "Físico" },
+      { name: "Bala de Lama", power: 22, element: "Terra" },
+      { name: "Investida", power: 14, element: "Físico" }
+    ]
+  },
+  {
+    name: "Ren Hatake",
+    emoji: "⚡",
+    avatarId: "m3",
+    maxHp: 225,
+    attack: 28,
+    defense: 10,
+    speed: 35,
+    moves: [
+      { name: "Corrente Elétrica", power: 29, element: "Raio" },
+      { name: "Shuriken Precisa", power: 13, element: "Físico" },
+      { name: "Rasteira", power: 11, element: "Físico" }
+    ]
+  },
+  {
+    name: "Hana Hyūga",
+    emoji: "👁️",
+    avatarId: "w1",
+    maxHp: 230,
+    attack: 22,
+    defense: 15,
+    speed: 28,
+    moves: [
+      { name: "Punho Gentil", power: 19, element: "Físico" },
+      { name: "Palma Dupla", power: 21, element: "Físico" },
+      { name: "Chute Frontal", power: 12, element: "Físico" },
+      { name: "Byakugan", power: 0, element: "Físico", buffAmount: 0.15, buffTurns: 10 }
+    ]
+  },
+  {
+    name: "Kaito Inuzuka",
+    emoji: "🐺",
+    avatarId: "m4",
+    maxHp: 235,
+    attack: 24,
+    defense: 14,
+    speed: 32,
+    moves: [
+      { name: "Garra Selvagem", power: 16, element: "Físico" },
+      { name: "Mordida Feroz", power: 20, element: "Físico" },
+      { name: "Ataque em Dupla", power: 18, element: "Físico" }
+    ]
+  },
+  {
+    name: "Mika Nara",
+    emoji: "🦌",
+    avatarId: "w2",
+    maxHp: 218,
+    attack: 18,
+    defense: 12,
+    speed: 26,
+    moves: [
+      { name: "Sombra Principal", power: 0, element: "Ilusão", paralyzeTurns: 2 },
+      { name: "Arremesso de Kunai", power: 14, element: "Físico" },
+      { name: "Golpe Surpresa", power: 18, element: "Físico" }
+    ]
+  },
+  {
+    name: "Yumi Yamanaka",
+    emoji: "🌸",
+    avatarId: "w3",
+    maxHp: 215,
+    attack: 16,
+    defense: 10,
+    speed: 24,
+    moves: [
+      { name: "Chute Ágil", power: 12, element: "Físico" },
+      { name: "Golpe Mental", power: 0, element: "Ilusão", paralyzeTurns: 2 },
+      { name: "Kunai Dupla", power: 15, element: "Físico" }
+    ]
+  },
+  {
+    name: "Takeshi Uzumaki",
+    emoji: "🌪️",
+    avatarId: "m5",
+    maxHp: 228,
+    attack: 26,
+    defense: 15,
+    speed: 29,
+    moves: [
+      { name: "Soco", power: 19, element: "Físico" },
+      { name: "Chute", power: 20, element: "Físico" },
+      { name: "Soco Impulsionado", power: 24, element: "Físico" }
+    ]
+  },
+  {
+    name: "Saiki Aburame",
+    emoji: "🪲",
+    avatarId: "m6",
+    maxHp: 232,
+    attack: 22,
+    defense: 16,
+    speed: 27,
+    moves: [
+      { name: "Enxame de Insetos", power: 28, element: "Físico" },
+      { name: "Picada Venenosa", power: 16, element: "Físico" },
+      { name: "Kunai Envenenada", power: 15, element: "Físico" }
+    ]
+  },
+  {
+    name: "Aoi Lee",
+    emoji: "🥋",
+    avatarId: "w4",
+    maxHp: 340,
+    attack: 30,
+    defense: 12,
+    speed: 38,
+    moves: [
+      { name: "Lótus Principal", power: 20, element: "Físico" },
+      { name: "Lótus Oculta", power: 22, element: "Físico" },
+      { name: "Joelhada", power: 19, element: "Físico" },
+      { name: "Primeiro Portão", power: 0, element: "Físico", buffAmount: 0.1, buffTurns: 10 }
     ]
   }
 ];

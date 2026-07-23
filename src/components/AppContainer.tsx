@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Zap, Activity, Flame, Sword, Eye, Wind, Droplet, Plus, RotateCcw, Star, Swords, HandFist } from "lucide-react";
+import { Zap, Activity, Flame, Sword, Eye, Wind, Shield, Plus, RotateCcw, Star, Swords, HandFist } from "lucide-react";
 import { useGameContext } from "../contexts/GameContext";
 import { NinjaAvatar } from "../avatars";
 import Battle from "../Battle";
@@ -131,7 +131,7 @@ export function AppContainer() {
               <StatBox label="Genjutsu" statKey="genjutsu" value={ninja.data.stats.genjutsu} icon={<Eye className="w-4 h-4 text-purple-500" />} points={ninja.data.skillPoints} onAdd={allocatePoint} />
               <StatBox label="Kenjutsu" statKey="kenjutsu" value={ninja.getKenjutsuStat()} icon={<Swords className="w-4 h-4 text-pink-400" />} points={ninja.data.skillPoints} onAdd={allocatePoint} />
               <StatBox label="Velocidade" statKey="speed" value={ninja.getSpeedStat()} icon={<Wind className="w-4 h-4 text-teal-400" />} points={ninja.data.skillPoints} onAdd={allocatePoint} />
-              <StatBox label="Fôlego" statKey="stamina" value={ninja.data.stats.stamina} icon={<Droplet className="w-4 h-4 text-blue-300" />} points={ninja.data.skillPoints} onAdd={allocatePoint} />
+              <StatBox label="Resistência" statKey="stamina" value={ninja.data.stats.stamina} icon={<Shield className="w-4 h-4 text-blue-300" />} points={ninja.data.skillPoints} onAdd={allocatePoint} />
             </div>
           </div>
 

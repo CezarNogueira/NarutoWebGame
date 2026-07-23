@@ -10,6 +10,7 @@ export class Ninja {
     this.data.ownedGear = this.data.ownedGear || [];
     this.data.knownJutsus = this.data.knownJutsus || [];
     this.data.day = this.data.day || 1;
+    this.data.trainedToday = this.data.trainedToday || false;
     if (this.data.maxVigor === undefined) this.data.maxVigor = 50;
     if (this.data.vigor === undefined) this.data.vigor = this.data.maxVigor;
   }
@@ -45,7 +46,8 @@ export class Ninja {
       ownedGear: [],
       perks: [],
       master: null,
-      day: 1
+      day: 1,
+      trainedToday: false
     };
 
     const starter = getStarterJutsu(ninjaClass, nature);
