@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Zap, Activity, Flame, Sword, Eye, Wind, Shield, Plus, RotateCcw, Star, Swords, HandFist } from "lucide-react";
+import { Zap, Activity, Flame, Sword, Eye, Wind, Shield, Plus, RotateCcw, Coins, Swords, HandFist } from "lucide-react";
 import { useGameContext } from "../contexts/GameContext";
 import { NinjaAvatar } from "../avatars";
 import Battle from "../Battle";
@@ -93,7 +92,7 @@ export function AppContainer() {
               </div>
             </div>
             <div className="flex items-center text-yellow-500 font-bold">
-              <Star className="w-4 h-4 mr-1" />
+              <Coins className="w-4 h-4 mr-1" />
               {ninja.data.ryo.toLocaleString()}
             </div>
             <button onClick={resetGame} title="Novo jogo" className="text-neutral-500 hover:text-red-400 transition-colors">

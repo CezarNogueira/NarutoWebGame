@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Star, Sparkles, Flame } from "lucide-react";
+import { Coins, Sparkles, Flame } from "lucide-react";
 import { useGameContext } from "../../contexts/GameContext";
 import { JUTSUS } from "../../data";
 
@@ -16,7 +16,7 @@ export function DashboardScreen() {
             <div className="text-neutral-400 text-sm mb-1">Ryo</div>
             <div className="text-2xl font-bold text-yellow-500">{ninja.data.ryo.toLocaleString()}</div>
           </div>
-          <div className="bg-yellow-500/10 p-3 rounded-full"><Star className="text-yellow-500 w-6 h-6" /></div>
+          <div className="bg-yellow-500/10 p-3 rounded-full"><Coins className="text-yellow-500 w-6 h-6" /></div>
         </div>
       </div>
 
