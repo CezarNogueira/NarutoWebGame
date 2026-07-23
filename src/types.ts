@@ -113,6 +113,8 @@ export type Ninja = {
   maxHealth: number;
   chakra: number;
   maxChakra: number;
+  vigor: number; // recurso alternativo ao Chakra, usado pelo clã Lee (que não usa chakra)
+  maxVigor: number;
   stats: Stats;
   skillPoints: number;
   missionsCompleted: Record<MissionRank, number>;

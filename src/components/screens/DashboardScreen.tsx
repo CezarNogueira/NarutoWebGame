@@ -10,8 +10,6 @@ export function DashboardScreen() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-      <h2 className="text-2xl font-bold">Resumo da Carreira</h2>
-      
       <div className="grid grid-cols-1 gap-4">
         <div className="bg-neutral-950 p-5 rounded-xl border border-neutral-800 flex items-center justify-between">
           <div>
@@ -35,7 +33,7 @@ export function DashboardScreen() {
               if (j.element === "Fogo" || j.element === "Água" || j.element === "Terra" || j.element === "Vento" || j.element === "Raio") {
                 return (
                   <span key={id} className="text-xs font-semibold bg-neutral-800 border border-neutral-700 px-3 py-1.5 rounded-full">
-                    {j.name} <span className="text-blue-400">· {j.chakraCost}CK</span>
+                    {j.name}
                   </span>
                 );
               }
@@ -55,7 +53,7 @@ export function DashboardScreen() {
                 if (j.name !== "Sharingan" && j.name !== "Mangekyō Sharingan") {
                   return (
                     <span key={id} className="text-xs font-semibold bg-purple-900/40 border border-purple-800 px-3 py-1.5 rounded-full">
-                      {j.name} <span className="text-blue-400">· {j.chakraCost}CK</span>
+                      {j.name}
                     </span>
                   );
                 }
@@ -79,7 +77,7 @@ export function DashboardScreen() {
               if (!isNature && !isGenjutsu && !isModo) {
                 return (
                   <span key={id} className="text-xs font-semibold bg-neutral-800 border border-neutral-700 px-3 py-1.5 rounded-full">
-                    {j.name} <span className="text-blue-400">· {j.chakraCost}CK</span>
+                    {j.name}
                   </span>
                 );
               }
@@ -99,7 +97,7 @@ export function DashboardScreen() {
               if (isModo) {
                 return (
                   <span key={id} className="text-xs font-semibold bg-red-900/40 border border-red-800 px-3 py-1.5 rounded-full text-red-200">
-                    {j.name} <span className="text-blue-400">· {j.chakraCost}CK</span>
+                    {j.name}
                   </span>
                 );
               }

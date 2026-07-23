@@ -10,6 +10,8 @@ export class Ninja {
     this.data.ownedGear = this.data.ownedGear || [];
     this.data.knownJutsus = this.data.knownJutsus || [];
     this.data.day = this.data.day || 1;
+    if (this.data.maxVigor === undefined) this.data.maxVigor = 50;
+    if (this.data.vigor === undefined) this.data.vigor = this.data.maxVigor;
   }
 
   static create(name: string, village: Village, ninjaClass: ClassType, nature: Nature, clan: Clan, avatarId: string): Ninja {
@@ -33,6 +35,8 @@ export class Ninja {
       health: 100,
       maxChakra: 50,
       chakra: 50,
+      maxVigor: 50,
+      vigor: 50,
       stats: startingStats,
       skillPoints: 0,
       missionsCompleted: { "Sem Rank": 0, D: 0, C: 0, B: 0, A: 0, S: 0 },
@@ -84,7 +88,13 @@ export class Ninja {
     return Math.floor(this.data.maxChakra * mult);
   }
 
-getTaijutsuStat(): number {
+getMaxVigor(): number {
+    let mult = 1.0;
+    if (this.data.clan === "Lee") mult += 0.2; // compensa a ausência de Chakra
+    return Math.floor(this.data.maxVigor * mult);
+  }
+
+  getTaijutsuStat(): number {
     let val = this.data.stats.taijutsu;
     if (this.data.clan === "Lee") {
       val = Math.floor(val * 1.15); // Inicial: +15% Taijutsu
@@ -185,6 +195,8 @@ getTaijutsuStat(): number {
       this.data.health = this.data.maxHealth;
       this.data.maxChakra += 10;
       this.data.chakra = this.getMaxChakra();
+      this.data.maxVigor += 10;
+      this.data.vigor = this.getMaxVigor();
       this.data.health = this.getMaxHealth();
       leveledUp = true;
     }
@@ -195,9 +207,13 @@ getTaijutsuStat(): number {
     if (fullRestore) {
       this.data.health = this.getMaxHealth();
       this.data.chakra = this.getMaxChakra();
+      this.data.vigor = this.getMaxVigor();
     } else {
       if (healthAmount) this.data.health = Math.min(this.getMaxHealth(), this.data.health + healthAmount);
-      if (chakraAmount) this.data.chakra = Math.min(this.getMaxChakra(), this.data.chakra + chakraAmount);
+      if (chakraAmount) {
+        this.data.chakra = Math.min(this.getMaxChakra(), this.data.chakra + chakraAmount);
+        this.data.vigor = Math.min(this.getMaxVigor(), this.data.vigor + chakraAmount);
+      }
     }
   }
 

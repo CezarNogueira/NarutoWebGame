@@ -59,12 +59,14 @@ export function useGame() {
   const eatRamen = () => {
     if (!ninja) return;
     if (ninja.data.ryo < 150) return addLog("Dinheiro insuficiente.", "danger");
-    if (ninja.data.health === ninja.getMaxHealth() && ninja.data.chakra === ninja.getMaxChakra()) {
+    const isLee = ninja.data.clan === "Lee";
+    const secondaryFull = isLee ? ninja.data.vigor === ninja.getMaxVigor() : ninja.data.chakra === ninja.getMaxChakra();
+    if (ninja.data.health === ninja.getMaxHealth() && secondaryFull) {
       return addLog("Você já está de barriga cheia!", "info");
     }
     ninja.data.ryo -= 150;
     ninja.restore(undefined, undefined, true);
-    addLog("O ramen do Ichiraku restaurou sua Vida e Chakra!", "success");
+    addLog(`O ramen do Ichiraku restaurou sua Vida e ${isLee ? "Vigor" : "Chakra"}!`, "success");
     setNinja(ninja);
   };
 
@@ -147,9 +149,15 @@ export function useGame() {
     if (!ninja) return;
     if (ninja.data.level < levelReq) return addLog(`Requer nível ${levelReq}`, "danger");
     if (ninja.data.stats.stamina < staminaCost) return addLog(`Stamina insuficiente (${staminaCost})`, "danger");
-    if (ninja.data.chakra < 30) return addLog("Chakra insuficiente para treinar.", "danger");
-    
-    ninja.data.chakra -= 30;
+
+    const isLee = ninja.data.clan === "Lee";
+    if (isLee) {
+      if (ninja.data.vigor < 30) return addLog("Vigor insuficiente para treinar.", "danger");
+      ninja.data.vigor -= 30;
+    } else {
+      if (ninja.data.chakra < 30) return addLog("Chakra insuficiente para treinar.", "danger");
+      ninja.data.chakra -= 30;
+    }
     ninja.data.stats[statKey] += 1;
     const xpGain = duration * 2;
     const leveledUp = ninja.addXp(xpGain);

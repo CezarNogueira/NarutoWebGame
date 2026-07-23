@@ -118,7 +118,11 @@ export function AppContainer() {
 
             <div className="space-y-4 mb-6">
               <VitalBar label="Vida" icon={<Activity className="w-4 h-4 mr-1 text-green-500" />} value={ninja.data.health} max={ninja.getMaxHealth()} color="bg-green-500" />
-              <VitalBar label="Chakra" icon={<Zap className="w-4 h-4 mr-1 text-blue-500" />} value={ninja.data.chakra} max={ninja.getMaxChakra()} color="bg-blue-500" />
+              {ninja.data.clan === "Lee" ? (
+                <VitalBar label="Vigor" icon={<Flame className="w-4 h-4 mr-1 text-orange-500" />} value={ninja.data.vigor} max={ninja.getMaxVigor()} color="bg-orange-500" />
+              ) : (
+                <VitalBar label="Chakra" icon={<Zap className="w-4 h-4 mr-1 text-blue-500" />} value={ninja.data.chakra} max={ninja.getMaxChakra()} color="bg-blue-500" />
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
