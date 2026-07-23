@@ -33,7 +33,7 @@ export type Jutsu = {
   kind: JutsuKind;
   element: Element;
   scaling: keyof Stats;
-  chakraCost: number;
+  chakraCost?: number;
   power: number;
   defense?: number;
   critBonus?: number;

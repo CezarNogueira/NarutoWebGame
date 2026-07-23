@@ -31,10 +31,10 @@ export const CLASSES: { name: ClassType; description: string; statFocus: keyof S
 // ------------------------------------------------------------------
 export const JUTSUS: Jutsu[] = [
 
-  { id: "j_uchiha_sharingan", name: "Sharingan", description: "Dá a capacidade de prever movimentos. +20% Dano.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 5, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
-  { id: "j_uchiha_mangekyou", name: "Mangekyō Sharingan", description: "Poder ocular supremo. +60% Dano.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 50, power: 0, buffTurns: 5, buffAmount: 0.6, scrollCost: -1, reqLevel: 40 },
-  { id: "j_hyuga_byakugan", name: "Byakugan", description: "Visão 360 e visão dos pontos de chakra. +30% Dano.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 0, buffTurns: 5, buffAmount: 0.3, scrollCost: -1, reqLevel: 10 },
-  { id: "j_senju_sabio", name: "Modo Sábio da Madeira", description: "Absorve energia natural. +100% Dano, cura 20% vida.", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 80, power: 0, buffTurns: 6, buffAmount: 1.0, healPercent: 0.2, scrollCost: -1, reqLevel: 40 },
+  { id: "j_uchiha_sharingan", name: "Sharingan", description: "Dá a capacidade de prever movimentos. +20% Dano.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
+  { id: "j_uchiha_mangekyou", name: "Mangekyō Sharingan", description: "Poder ocular supremo. +60% Dano.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 50, power: 0, buffTurns: 15, buffAmount: 0.6, scrollCost: -1, reqLevel: 40 },
+  { id: "j_hyuga_byakugan", name: "Byakugan", description: "Visão 360 e visão dos pontos de chakra. +30% Dano.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 0, buffTurns: 15, buffAmount: 0.3, scrollCost: -1, reqLevel: 10 },
+  { id: "j_senju_sabio", name: "Modo Sábio da Madeira", description: "Absorve energia natural. +100% Dano, cura 20% vida.", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 80, power: 0, buffTurns: 10, buffAmount: 1.0, healPercent: 0.2, scrollCost: -1, reqLevel: 40 },
 
 
   { id: "j_uchiha_genjutsu", name: "Genjutsu Ocular", description: "Paralisa o inimigo.", kind: "paralyze", element: "Ilusão", scaling: "genjutsu", chakraCost: 20, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 25 },
@@ -48,7 +48,7 @@ export const JUTSUS: Jutsu[] = [
 
 
   // Kenjutsu
-  { id: "j_sword_strike", name: "Corte Preciso", description: "Golpe rápido com espada de chakra.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 8, power: 46, defense: 0, scrollCost: 0, reqLevel: 1, starter: "Kenjutsu" },
+  { id: "j_sword_strike", name: "Corte Preciso", description: "Golpe rápido com espada de chakra.", kind: "attack", element: "Físico", scaling: "kenjutsu", power: 46, defense: 0, scrollCost: 0, reqLevel: 1, starter: "Kenjutsu" },
 
   // Kakashi
   { id: "j_chidori", name: "Chidori", description: "Mil Pássaros (Raiton)", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 25, power: 45, defense: 0, scrollCost: -1, reqLevel: 16 },
@@ -61,14 +61,14 @@ export const JUTSUS: Jutsu[] = [
   { id: "j_petals", name: "Genjutsu das Pétalas", description: "Paralisa o inimigo por 2 turnos.", kind: "paralyze", element: "Ilusão", scaling: "genjutsu", chakraCost: 25, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 12 },
 
   // Maito Guy (Gates)
-  { id: "j_gate_1", name: "Primeiro Portão (Abertura)", description: "+10% de Dano, custa 10% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 10, power: 0, buffTurns: 10, buffAmount: 0.1, healthCostPercent: 0.1, scrollCost: -1, reqLevel: 5 },
-  { id: "j_gate_2", name: "Segundo Portão (Cura)", description: "+20% de Dano, custa 15% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 15, power: 0, buffTurns: 10, buffAmount: 0.2, healthCostPercent: 0.15, scrollCost: -1, reqLevel: 10 },
-  { id: "j_gate_3", name: "Terceiro Portão (Vida)", description: "+35% de Dano, custa 20% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 0, buffTurns: 10, buffAmount: 0.35, healthCostPercent: 0.2, scrollCost: -1, reqLevel: 15 },
-  { id: "j_gate_4", name: "Quarto Portão (Dor)", description: "+50% de Dano, custa 25% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 25, power: 0, buffTurns: 10, buffAmount: 0.5, healthCostPercent: 0.25, scrollCost: -1, reqLevel: 20 },
-  { id: "j_gate_5", name: "Quinto Portão (Limite)", description: "+70% de Dano, custa 30% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 35, power: 0, buffTurns: 10, buffAmount: 0.7, healthCostPercent: 0.3, scrollCost: -1, reqLevel: 25 },
-  { id: "j_gate_6", name: "Sexto Portão (Visão)", description: "+95% de Dano, custa 40% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 50, power: 0, buffTurns: 10, buffAmount: 0.95, healthCostPercent: 0.4, scrollCost: -1, reqLevel: 30 },
-  { id: "j_gate_7", name: "Sétimo Portão (Assombro)", description: "+130% de Dano, custa 50% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 75, power: 0, buffTurns: 10, buffAmount: 1.3, healthCostPercent: 0.5, scrollCost: -1, reqLevel: 35 },
-  { id: "j_gate_8", name: "Oitavo Portão (Morte)", description: "+250% de Dano. Ao fim da técnica, vida reduzida a 1 e morte iminente.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 100, power: 0, buffTurns: 10, buffAmount: 2.5, deathAfterBuff: true, scrollCost: -1, reqLevel: 40 },
+  { id: "j_gate_1", name: "Primeiro Portão (Abertura)", description: "+10% de Dano, custa 10% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 0.1, healthCostPercent: 0.1, scrollCost: -1, reqLevel: 5 },
+  { id: "j_gate_2", name: "Segundo Portão (Cura)", description: "+20% de Dano, custa 15% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 0.2, healthCostPercent: 0.15, scrollCost: -1, reqLevel: 10 },
+  { id: "j_gate_3", name: "Terceiro Portão (Vida)", description: "+35% de Dano, custa 20% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 0.35, healthCostPercent: 0.2, scrollCost: -1, reqLevel: 15 },
+  { id: "j_gate_4", name: "Quarto Portão (Dor)", description: "+50% de Dano, custa 25% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 0.5, healthCostPercent: 0.25, scrollCost: -1, reqLevel: 20 },
+  { id: "j_gate_5", name: "Quinto Portão (Limite)", description: "+70% de Dano, custa 30% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 0.7, healthCostPercent: 0.3, scrollCost: -1, reqLevel: 25 },
+  { id: "j_gate_6", name: "Sexto Portão (Visão)", description: "+95% de Dano, custa 40% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 0.95, healthCostPercent: 0.4, scrollCost: -1, reqLevel: 30 },
+  { id: "j_gate_7", name: "Sétimo Portão (Assombro)", description: "+130% de Dano, custa 50% da Vida atual.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 1.3, healthCostPercent: 0.5, scrollCost: -1, reqLevel: 35 },
+  { id: "j_gate_8", name: "Oitavo Portão (Morte)", description: "+250% de Dano. Ao fim da técnica, vida reduzida a 1 e morte iminente.", kind: "buff", element: "Físico", scaling: "taijutsu", power: 0, buffTurns: 10, buffAmount: 2.5, deathAfterBuff: true, scrollCost: -1, reqLevel: 40 },
 
 
   { id: "j_chidori_nagashi", name: "Chidori Nagashi", description: "Corrente elétrica de alta potência emanando do corpo.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 80, power: 95, defense: 0, scrollCost: -1, reqLevel: 30 },
@@ -108,7 +108,6 @@ export const JUTSUS: Jutsu[] = [
   { id: "j_terra_24", name: "Muralha de Terra", description: "Doryūheki", kind: "buff", element: "Terra", scaling: "ninjutsu", chakraCost: 35, power: 0, defense: 75, scrollCost: 0, reqLevel: 24 },
 
   // --- Iniciais por classe ---
-  
   {
     id: "j_swiftfist", name: "Punho Veloz", description: "Uma sequência rápida de golpes corpo a corpo.",
     kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 8, power: 46, critBonus: 8,
@@ -121,10 +120,9 @@ export const JUTSUS: Jutsu[] = [
   },
   {
     id: "j_healpalm", name: "Palma Curativa", description: "Concentra chakra na mão para curar seus ferimentos.",
-    kind: "heal", element: "Cura", scaling: "kenjutsu", chakraCost: 14, power: 0, healPercent: 0.35,
+    kind: "heal", element: "Cura", scaling: "ninjutsu", chakraCost: 14, power: 0, healPercent: 0.35,
     scrollCost: 0, reqLevel: 1, starter: "Médico",
   },
-
   // --- Aprendíveis em pergaminhos ---
   {
     id: "j_shadowclone", name: "Clones das Sombras", description: "Cria clones que aumentam seu dano por 3 turnos.",
