@@ -35,7 +35,7 @@ export function TrainingScreen() {
         <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Taijutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("taijutsu", "Taijutsu", 5, 1, 10)} icon={<HandFist className="w-5 h-5 text-gray-400" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Genjutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("genjutsu", "Genjutsu", 5, 1, 10)} icon={<Eye className="w-5 h-5 text-purple-500" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Kenjutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("kenjutsu", "Kenjutsu", 5, 1, 5)} icon={<Swords className="w-5 h-5 text-pink-400" />} />
-        <TrainingCard disabled={ninja.data.trainedToday} title="Correr com Pesos" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("speed", "Velocidade", 5, 1, 15)} icon={<Wind className="w-5 h-5 text-teal-400" />} />
+        <TrainingCard disabled={ninja.data.trainedToday} title="Correr com Pesos" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("speed", "Velocidade", 5, 1, 10)} icon={<Wind className="w-5 h-5 text-teal-400" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Meditação na Cachoeira" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("stamina", "Resistência", 5, 1, 5)} icon={<Shield className="w-5 h-5 text-blue-300" />} />
       </div>
     </motion.div>
