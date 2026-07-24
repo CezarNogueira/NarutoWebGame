@@ -87,7 +87,7 @@ export const JUTSUS: Jutsu[] = [
 
   { id: "j_chidori_nagashi", name: "Chidori Nagashi", description: "Corrente elétrica de alta potência emanando do corpo.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 80, power: 95, defense: 0, scrollCost: -1, reqLevel: 30 },
   // Fogo
-  { id: "j_fogo_0", name: "Pequena Bala de Fogo", description: "Shō Gōkakyū", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 8, power: 14, defense: 0, scrollCost: 0, reqLevel: 1 },
+  { id: "j_fogo_0", name: "Pequena Bola de Fogo", description: "Shō Gōkakyū", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 8, power: 14, defense: 0, scrollCost: 0, reqLevel: 1 },
   { id: "j_fogo_5", name: "Grande Bola de Fogo", description: "Gōkakyū no Jutsu", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 15, power: 28, defense: 0, scrollCost: 0, reqLevel: 5 },
   { id: "j_fogo_12", name: "Chamas da Fênix", description: "Hōsenka no Jutsu", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 20, power: 35, defense: 0, scrollCost: 0, reqLevel: 12 },
   { id: "j_fogo_18", name: "Técnica da Labareda", description: "Hōka no Jutsu", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 30, power: 48, defense: 0, scrollCost: 0, reqLevel: 18 },
