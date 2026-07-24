@@ -191,7 +191,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
   const basicAttack = () => {
     if (phase !== "player") return;
     setPhase("enemy");
-    const { dmg, crit } = calcPlayerDamage("taijutsu", 42, 6);
+    const { dmg, crit } = calcPlayerDamage("taijutsu", 5, 6);
     addLog(`Você atacou${crit ? " (CRÍTICO!)" : ""} e causou ${dmg} de dano.`, "you");
     afterPlayer(eHp - dmg, pHp, pChakra, pVigor, usedItems);
   };
