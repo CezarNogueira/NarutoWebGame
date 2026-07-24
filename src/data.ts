@@ -31,35 +31,93 @@ export const CLASSES: { name: ClassType; description: string; statFocus: keyof S
 // ------------------------------------------------------------------
 export const JUTSUS: Jutsu[] = [
 
-  { id: "j_uchiha_sharingan", name: "Sharingan", description: "Dá a capacidade de prever movimentos. +20% Dano.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
-  { id: "j_uchiha_mangekyou", name: "Mangekyō Sharingan", description: "Poder ocular supremo. +60% Dano.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 50, power: 0, buffTurns: 15, buffAmount: 0.6, scrollCost: -1, reqLevel: 40 },
-  { id: "j_uchiha_amaterasu", name: "Amaterasu", description: "Chamas negras que queimam tudo o que tocam.", kind: "attack", element: "Fogo", scaling: "genjutsu", chakraCost: 60, power: 100, defense: 0, scrollCost: -1, reqLevel: 45 },
-  { id: "j_uchiha_susanoo", name: "Susanoo", description: "Modo: invoca uma armadura espectral. +120% Dano e defesa massiva.", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 90, power: 0, buffTurns: 12, buffAmount: 1.2, defense: 80, scrollCost: -1, reqLevel: 50 },
-  { id: "j_hyuga_byakugan", name: "Byakugan", description: "Visão 360 e visão dos pontos de chakra. +30% Dano.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 0, buffTurns: 15, buffAmount: 0.3, scrollCost: -1, reqLevel: 10 },
-  { id: "j_hyuga_64palmas", name: "64 Palmas do Trigrama Celestial", description: "Sequência avassaladora de golpes nos pontos de chakra.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 55, power: 100, scrollCost: -1, reqLevel: 40 },
-  { id: "j_hyuga_byakugan_absoluto", name: "Byakugan Absoluto", description: "Modo: visão total ininterrupta. +50% Dano.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 45, power: 0, buffTurns: 15, buffAmount: 0.5, scrollCost: -1, reqLevel: 45 },
-  { id: "j_senju_sabio", name: "Modo Sábio da Madeira", description: "Modo: absorve energia natural. +100% Dano, cura 20% vida.", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 80, power: 0, buffTurns: 10, buffAmount: 1.0, healPercent: 0.2, scrollCost: -1, reqLevel: 40 },
-  { id: "j_senju_regeneracao", name: "Regeneração Celular", description: "Suas células se regeneram em alta velocidade.", kind: "heal", element: "Cura", scaling: "ninjutsu", chakraCost: 30, power: 0, healPercent: 0.35, scrollCost: -1, reqLevel: 15 },
-  { id: "j_senju_hokage", name: "Golpe do Primeiro Hokage", description: "Técnica ancestral herdada do fundador da Vila.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 35, power: 65, scrollCost: -1, reqLevel: 25 },
+  // ==================== SENJU ====================
+  // Modos
+  { id: "j_senju_fluxo", name: "Fluxo de Chakra Senju", description: "O enorme chakra dos Senju fortalece todas as técnicas", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 25, power: 0, buffTurns: 12, buffAmount: 0.35, scrollCost: -1, reqLevel: 10 },
+  { id: "j_senju_dominio", name: "Domínio do Chakra", description: "Controle absoluto do chakra", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 55, power: 0, buffTurns: 12, buffAmount: 0.6, defense: 40, scrollCost: -1, reqLevel: 40 },
 
+  // Ataques
+  { id: "j_senju_impacto", name: "Impacto de Chakra", description: "Concentra chakra no punho e desfere um golpe devastador", kind: "attack", element: "Neutro", scaling: "ninjutsu", chakraCost: 35, power: 60, scrollCost: -1, reqLevel: 20 },
+  { id: "j_senju_colosso", name: "Golpe do Colosso", description: "Toda a reserva de chakra é concentrada em um único ataque esmagador", kind: "attack", element: "Neutro", scaling: "ninjutsu", chakraCost: 70, power: 110, scrollCost: -1, reqLevel: 50 },
 
+  // Cura
+  { id: "j_senju_pulso", name: "Pulso Vital", description: "Canaliza sua vitalidade para recuperar parte da vida", kind: "heal", element: "Cura", scaling: "ninjutsu", chakraCost: 30, power: 0, healPercent: 0.25, scrollCost: -1, reqLevel: 15 },
+  { id: "j_senju_recuperacao", name: "Recuperação Avançada", description: "A lendária resistência Senju restaura continuamente o corpo", kind: "heal", element: "Cura", scaling: "ninjutsu", chakraCost: 45, power: 0, healPercent: 0.45, scrollCost: -1, reqLevel: 30 },
+
+  // ==================== HYUUGA ====================
+  // Modos
+  { id: "j_hyuga_byakugan", name: "Byakugan", description: "Visão 360 e visão dos pontos de chakra", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 0, buffTurns: 15, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
+  { id: "j_hyuga_fluxo", name: "Fluxo Perfeito", description: "O chakra flui livremente", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 35, power: 0, buffTurns: 12, buffAmount: 0.4, scrollCost: -1, reqLevel: 35 },
+
+  // Ataques
+  { id: "j_hyuga_palma", name: "Palma Cortante", description: "Um golpe preciso que atravessa a defesa", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 18, power: 32, defense: -10, scrollCost: -1, reqLevel: 8 },
+  { id: "j_hyuga_punho", name: "Punho Gentil", description: "Ataque rápido e preciso", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 15, power: 30, scrollCost: -1, reqLevel: 10 },
+  { id: "j_hyuga_pulsacao", name: "Pulso de Chakra", description: "Libera uma onda de chakra que atinge o inimigo", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 28, power: 48, scrollCost: -1, reqLevel: 16 },
+  { id: "j_hyuga_8trigramas", name: "Oito Trigramas", description: "Série de golpes nos pontos de chakra", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 35, power: 60, scrollCost: -1, reqLevel: 20 },
+  { id: "j_hyuga_pressao", name: "Pressão dos Meridianos", description: "Golpes bloqueiam parcialmente o fluxo de chakra", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 38, power: 60, scrollCost: -1, reqLevel: 28 },
+  { id: "j_hyuga_rotacao", name: "Rotação Celestial", description: "Defesa e ataque absolutos", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 40, power: 40, defense: 40, scrollCost: -1, reqLevel: 30 },
+  { id: "j_hyuga_64palmas", name: "64 Palmas do Trigrama Celestial", description: "Sequência avassaladora de golpes nos pontos de chakra", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 55, power: 100, scrollCost: -1, reqLevel: 40 },
+  { id: "j_hyuga_explosao", name: "Explosão de Chakra", description: "Uma poderosa descarga de chakra em todas as direções", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 60, power: 100, scrollCost: -1, reqLevel: 50 },
+
+  // ==================== UCHIHA ====================
+  // Modos
+  { id: "j_uchiha_sharingan1t", name: "Sharingan 1 Tomoe", description: "Desperta o básico da percepção visual", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.1, scrollCost: -1, reqLevel: 5 },
+  { id: "j_uchiha_sharingan2t", name: "Sharingan 2 Tomoes", description: "Melhora a capacidade de previsão do Sharingan", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
+  { id: "j_uchiha_sharingan3t", name: "Sharingan 3 Tomoes", description: "O nível máximo do Sharingan regular", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.3, scrollCost: -1, reqLevel: 16 },
+  { id: "j_uchiha_mangekyou", name: "Mangekyō Sharingan", description: "Poder ocular supremo", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 50, power: 0, buffTurns: 15, buffAmount: 0.6, scrollCost: -1, reqLevel: 40 },
+  { id: "j_uchiha_susanoo", name: "Susanoo", description: "Modo: invoca uma armadura espectral", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 90, power: 0, buffTurns: 4, buffAmount: 1.0, defense: 180, scrollCost: -1, reqLevel: 50 },
+
+  // Ataques
+  { id: "j_uchiha_labareda", name: "Labareda Escarlate", description: "Dispara uma corrente intensa de fogo", kind: "attack", element: "Fogo", scaling: "genjutsu", chakraCost: 20, power: 34, scrollCost: -1, reqLevel: 8 },
+  { id: "j_uchiha_fenix", name: "Asas da Fênix", description: "Diversas pequenas chamas atingem o alvo", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 45, power: 72, scrollCost: -1, reqLevel: 35 },
+  { id: "j_uchiha_amaterasu", name: "Amaterasu", description: "Chamas negras que queimam tudo o que tocam", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 60, power: 100, scrollCost: -1, reqLevel: 45 },
+  { id: "j_uchiha_dragao", name: "Dragão Carmesim", description: "Um enorme dragão de fogo investe contra o inimigo", kind: "attack", element: "Fogo", scaling: "ninjutsu", chakraCost: 70, power: 110, scrollCost: -1, reqLevel: 50 },
+
+  // Utilidade
   { id: "j_uchiha_genjutsu", name: "Genjutsu Ocular", description: "Paralisa o inimigo.", kind: "paralyze", element: "Ilusão", scaling: "genjutsu", chakraCost: 20, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 25 },
-  { id: "j_hyuga_punho", name: "Punho Gentil", description: "Ataque rápido e preciso.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 15, power: 30, scrollCost: -1, reqLevel: 10 },
-  { id: "j_hyuga_8trigramas", name: "Oito Trigramas", description: "Série de golpes nos pontos de chakra.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 35, power: 60, scrollCost: -1, reqLevel: 20 },
-  { id: "j_hyuga_rotacao", name: "Rotação Celestial", description: "Defesa e ataque absolutos.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 40, power: 40, defense: 40, scrollCost: -1, reqLevel: 30 },
-  { id: "j_uzumaki_correntes", name: "Correntes de Chakra", description: "Prende o oponente.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 30, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 10 },
-  { id: "j_uzumaki_selamento", name: "Selamento Uzumaki", description: "Bloqueia jutsus do inimigo.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 50, power: 0, paralyzeTurns: 4, scrollCost: -1, reqLevel: 30 },
-  { id: "j_uzumaki_rasenshuriken", name: "Rasenshuriken", description: "Esfera cortante que destrói tudo ao redor.", kind: "attack", element: "Vento", scaling: "ninjutsu", chakraCost: 70, power: 110, healthCostPercent: 0.05, scrollCost: -1, reqLevel: 40 },
-  { id: "j_uzumaki_kyuubi", name: "Manto do Kyuubi", description: "Modo: veste o chakra da raposa. +90% Dano, cura 25% vida.", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 85, power: 0, buffTurns: 10, buffAmount: 0.9, healPercent: 0.25, scrollCost: -1, reqLevel: 45 },
+
+  // Defesas
+  { id: "j_uchiha_reflexo", name: "Reflexo Ocular", description: "Os olhos antecipam movimentos", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 20, power: 0, defense: 25, buffTurns: 12, scrollCost: -1, reqLevel: 15 },
+
+  // ==================== LEE ====================
+  // Modos
+  { id: "j_lee_postura", name: "Postura Inabalável", description: "Fortalece o corpo.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 15, power: 0, defense: 35, buffTurns: 12, scrollCost: -1, reqLevel: 15 },
+
+  // Ataques
   { id: "j_lee_senpuu", name: "Konoha Senpuu", description: "Chute giratório rápido.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 10, power: 20, scrollCost: -1, reqLevel: 3 },
   { id: "j_lee_reppuu", name: "Konoha Reppuu", description: "Furacão de golpes consecutivos.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 15, power: 35, scrollCost: -1, reqLevel: 7 },
+  { id: "j_lee_meteoro", name: "Impacto Meteórico", description: "Salta e desfere um golpe devastador.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 18, power: 34, scrollCost: -1, reqLevel: 8 },
   { id: "j_lee_lotus1", name: "Lótus Primária", description: "Ataque devastador de Taijutsu.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 20, power: 40, scrollCost: -1, reqLevel: 10 },
-  { id: "j_lee_bandagens", name: "Bandagens de Chakra", description: "Bandagens reforçadas aumentam sua defesa.", kind: "buff", element: "Físico", scaling: "taijutsu", chakraCost: 10, power: 0, defense: 30, scrollCost: -1, reqLevel: 12 },
   { id: "j_lee_lotus2", name: "Lótus Oculta", description: "Ataque ainda mais devastador.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 40, power: 80, scrollCost: -1, reqLevel: 20 },
-  { id: "j_hatake_raikiri", name: "Raikiri", description: "Evolução do Chidori, corta tudo em seu caminho.", kind: "attack", element: "Raio", scaling: "kenjutsu", chakraCost: 45, power: 75, scrollCost: -1, reqLevel: 35 },
-  { id: "j_hatake_sharingan", name: "Sharingan Copiado", description: "Modo: prevê e copia movimentos do oponente. +40% Dano.", kind: "buff", element: "Ilusão", scaling: "kenjutsu", chakraCost: 50, power: 0, buffTurns: 12, buffAmount: 0.4, scrollCost: -1, reqLevel: 45 },
-  { id: "j_hatake_kamui", name: "Kamui", description: "Distorce o espaço e isola o inimigo em outra dimensão.", kind: "paralyze", element: "Neutro", scaling: "kenjutsu", chakraCost: 60, power: 0, paralyzeTurns: 3, scrollCost: -1, reqLevel: 50 },
+  { id: "j_lee_turbina", name: "Turbina Giratória", description: "Sequência de chutes giratórios.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 30, power: 60, scrollCost: -1, reqLevel: 25 },
+  { id: "j_lee_pressao", name: "Pressão Esmagadora", description: "Ataque brutal que derruba o adversário.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 45, power: 82, scrollCost: -1, reqLevel: 35 },
+  { id: "j_lee_cometa", name: "Cometa Verde", description: "Uma investida em velocidade máxima.", kind: "attack", element: "Físico", scaling: "taijutsu", chakraCost: 65, power: 110, scrollCost: -1, reqLevel: 50 },
 
+  // ==================== UZUMAKI ====================
+  // Modos
+  { id: "j_uzumaki_barreira", name: "Barreira Espiritual", description: "Uma barreira aumenta sua defesa.", kind: "buff", element: "Neutro", scaling: "ninjutsu", chakraCost: 25, power: 0, defense: 45, buffTurns: 12, scrollCost: -1, reqLevel: 15 },
+
+  // Ataques
+  { id: "j_uzumaki_espiral", name: "Espiral de Chakra", description: "Uma onda espiral de chakra atinge o inimigo.", kind: "attack", element: "Neutro", scaling: "ninjutsu", chakraCost: 18, power: 30, scrollCost: -1, reqLevel: 8 },
+  { id: "j_uzumaki_corrente", name: "Prisão Espiral", description: "Correntes de chakra esmagam o adversário.", kind: "attack", element: "Neutro", scaling: "ninjutsu", chakraCost: 65, power: 105, scrollCost: -1, reqLevel: 50 },
+
+  // Utilidade
+  { id: "j_uzumaki_correntes", name: "Correntes de Chakra", description: "Prende o oponente.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 30, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 10 },
+  { id: "j_uzumaki_selo", name: "Marca Restritiva", description: "Um selo limita os movimentos do inimigo.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 35, power: 0, paralyzeTurns: 2, scrollCost: -1, reqLevel: 25 },
+  { id: "j_uzumaki_selamento", name: "Selamento Uzumaki", description: "Bloqueia jutsus do inimigo.", kind: "paralyze", element: "Neutro", scaling: "ninjutsu", chakraCost: 50, power: 0, paralyzeTurns: 4, scrollCost: -1, reqLevel: 30 },
+
+  // Cura
+  { id: "j_uzumaki_vitalidade", name: "Vitalidade Uzumaki", description: "A extraordinária resistência do clã restaura vida.", kind: "heal", element: "Cura", scaling: "ninjutsu", chakraCost: 35, power: 0, healPercent: 0.4, scrollCost: -1, reqLevel: 35 },
+
+  // ==================== HATAKE ====================
+  // Modos
+  { id: "j_hatake_instinto", name: "Instinto Hatake", description: "Experiência em combate aumenta o dano em 30%.", kind: "buff", element: "Raio", scaling: "ninjutsu", chakraCost: 25, power: 0, buffTurns: 12, buffAmount: 0.3, scrollCost: -1, reqLevel: 15 },
+
+  // Ataques
+  { id: "j_hatake_raikou", name: "Raikou", description: "Descarga elétrica concentrada na palma da mão.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 20, power: 36, scrollCost: -1, reqLevel: 8 },
+  { id: "j_hatake_lamina", name: "Lâmina Elétrica", description: "Reveste a arma com eletricidade.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 35, power: 58, scrollCost: -1, reqLevel: 25 },
+  { id: "j_hatake_trovao", name: "Trovão Descendente", description: "Um poderoso raio cai sobre o inimigo.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 50, power: 85, scrollCost: -1, reqLevel: 35 },
+  { id: "j_hatake_tempestade", name: "Tempestade Elétrica", description: "Diversos raios atingem o campo de batalha.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 70, power: 110, scrollCost: -1, reqLevel: 50 },
 
   // Kenjutsu
   { id: "j_sword_strike", name: "Corte Preciso", description: "Golpe rápido com espada de chakra.", kind: "attack", element: "Físico", scaling: "kenjutsu", power: 46, defense: 0, scrollCost: 0, reqLevel: 1, starter: "Kenjutsu" },

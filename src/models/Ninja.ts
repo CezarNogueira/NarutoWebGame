@@ -155,50 +155,90 @@ getMaxVigor(): number {
 
   checkClanSkills(): string[] {
     let newLearned: string[] = [];
+
     const learn = (id: string, name: string) => {
       if (!this.data.knownJutsus.includes(id)) {
         this.data.knownJutsus.push(id);
         newLearned.push(name);
       }
     };
+
+    // ==================== UCHIHA ====================
     if (this.data.clan === "Uchiha") {
-      if (this.data.level >= 10) learn("j_uchiha_sharingan", "Sharingan");
+      if (this.data.level >= 5) learn("j_uchiha_sharingan1t", "Sharingan 1 Tomoe");
+      if (this.data.level >= 8)  learn("j_uchiha_labareda", "Labareda Escarlate");
+      if (this.data.level >= 10) learn("j_uchiha_sharingan2t", "Sharingan 2 Tomoes");
+      if (this.data.level >= 16) learn("j_uchiha_sharingan3t", "Sharingan 3 Tomoes");
+      if (this.data.level >= 17) learn("j_uchiha_reflexo", "Reflexo Ocular");
       if (this.data.level >= 25) learn("j_uchiha_genjutsu", "Genjutsu Ocular");
+      if (this.data.level >= 35) learn("j_uchiha_fenix", "Asas da Fênix");
       if (this.data.level >= 40) learn("j_uchiha_mangekyou", "Mangekyō Sharingan");
       if (this.data.level >= 45) learn("j_uchiha_amaterasu", "Amaterasu");
-      if (this.data.level >= 50) learn("j_uchiha_susanoo", "Susanoo");
+      if (this.data.level >= 50) {
+        learn("j_uchiha_dragao", "Dragão Carmesim");
+        learn("j_uchiha_susanoo", "Susanoo");
+      }
     }
+
+    // ==================== HYŪGA ====================
     if (this.data.clan === "Hyūga") {
-      if (this.data.level >= 10) learn("j_hyuga_byakugan", "Byakugan");
-      if (this.data.level >= 10) learn("j_hyuga_punho", "Punho Gentil");
+      if (this.data.level >= 8)  learn("j_hyuga_palma", "Palma Cortante");
+      if (this.data.level >= 10) {
+        learn("j_hyuga_byakugan", "Byakugan");
+        learn("j_hyuga_punho", "Punho Gentil");
+      }
+      if (this.data.level >= 16) learn("j_hyuga_pulsacao", "Pulso de Chakra");
       if (this.data.level >= 20) learn("j_hyuga_8trigramas", "Oito Trigramas");
+      if (this.data.level >= 28) learn("j_hyuga_pressao", "Pressão dos Meridianos");
       if (this.data.level >= 30) learn("j_hyuga_rotacao", "Rotação Celestial");
+      if (this.data.level >= 35) learn("j_hyuga_fluxo", "Fluxo Perfeito");
       if (this.data.level >= 40) learn("j_hyuga_64palmas", "64 Palmas do Trigrama Celestial");
-      if (this.data.level >= 45) learn("j_hyuga_byakugan_absoluto", "Byakugan Absoluto");
+      if (this.data.level >= 50) learn("j_hyuga_explosao", "Explosão de Chakra");
     }
+
+    // ==================== UZUMAKI ====================
     if (this.data.clan === "Uzumaki") {
+      if (this.data.level >= 8)  learn("j_uzumaki_espiral", "Espiral de Chakra");
       if (this.data.level >= 10) learn("j_uzumaki_correntes", "Correntes de Chakra");
+      if (this.data.level >= 15) learn("j_uzumaki_barreira", "Barreira Espiritual");
+      if (this.data.level >= 25) learn("j_uzumaki_selo", "Marca Restritiva");
       if (this.data.level >= 30) learn("j_uzumaki_selamento", "Selamento Uzumaki");
-      if (this.data.level >= 40) learn("j_uzumaki_rasenshuriken", "Rasenshuriken");
-      if (this.data.level >= 45) learn("j_uzumaki_kyuubi", "Manto do Kyuubi");
+      if (this.data.level >= 35) learn("j_uzumaki_vitalidade", "Vitalidade Uzumaki");
+      if (this.data.level >= 50) learn("j_uzumaki_corrente", "Prisão Espiral");
     }
+
+    // ==================== LEE ====================
     if (this.data.clan === "Lee") {
-      if (this.data.level >= 3) learn("j_lee_senpuu", "Konoha Senpuu");
-      if (this.data.level >= 7) learn("j_lee_reppuu", "Konoha Reppuu");
+      if (this.data.level >= 3)  learn("j_lee_senpuu", "Konoha Senpuu");
+      if (this.data.level >= 7)  learn("j_lee_reppuu", "Konoha Reppuu");
+      if (this.data.level >= 8)  learn("j_lee_meteoro", "Impacto Meteórico");
       if (this.data.level >= 10) learn("j_lee_lotus1", "Lótus Primária");
-      if (this.data.level >= 12) learn("j_lee_bandagens", "Bandagens de Chakra");
+      if (this.data.level >= 15) learn("j_lee_postura", "Postura Inabalável");
       if (this.data.level >= 20) learn("j_lee_lotus2", "Lótus Oculta");
+      if (this.data.level >= 25) learn("j_lee_turbina", "Turbina Giratória");
+      if (this.data.level >= 35) learn("j_lee_pressao", "Pressão Esmagadora");
+      if (this.data.level >= 50) learn("j_lee_cometa", "Cometa Verde");
     }
+
+    // ==================== SENJU ====================
     if (this.data.clan === "Senju") {
-      if (this.data.level >= 15) learn("j_senju_regeneracao", "Regeneração Celular");
-      if (this.data.level >= 25) learn("j_senju_hokage", "Golpe do Primeiro Hokage");
-      if (this.data.level >= 40) learn("j_senju_sabio", "Modo Sábio da Madeira");
+      if (this.data.level >= 10) learn("j_senju_fluxo", "Fluxo de Chakra Senju");
+      if (this.data.level >= 15) learn("j_senju_pulso", "Pulso Vital");
+      if (this.data.level >= 20) learn("j_senju_impacto", "Impacto de Chakra");
+      if (this.data.level >= 30) learn("j_senju_recuperacao", "Recuperação Avançada");
+      if (this.data.level >= 40) learn("j_senju_dominio", "Domínio do Chakra");
+      if (this.data.level >= 50) learn("j_senju_colosso", "Golpe do Colosso");
     }
+
+    // ==================== HATAKE ====================
     if (this.data.clan === "Hatake") {
-      if (this.data.level >= 35) learn("j_hatake_raikiri", "Raikiri");
-      if (this.data.level >= 45) learn("j_hatake_sharingan", "Sharingan Copiado");
-      if (this.data.level >= 50) learn("j_hatake_kamui", "Kamui");
+      if (this.data.level >= 8)  learn("j_hatake_raikou", "Raikou");
+      if (this.data.level >= 15) learn("j_hatake_instinto", "Instinto Hatake");
+      if (this.data.level >= 25) learn("j_hatake_lamina", "Lâmina Elétrica");
+      if (this.data.level >= 35) learn("j_hatake_trovao", "Trovão Descendente");
+      if (this.data.level >= 50) learn("j_hatake_tempestade", "Tempestade Elétrica");
     }
+
     return newLearned;
   }
 
