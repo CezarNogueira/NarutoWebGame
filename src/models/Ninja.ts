@@ -10,7 +10,6 @@ export class Ninja {
     this.data.ownedGear = this.data.ownedGear || [];
     this.data.knownJutsus = this.data.knownJutsus || [];
     this.data.day = this.data.day || 1;
-    this.data.trainedToday = this.data.trainedToday || false;
     if (this.data.maxVigor === undefined) this.data.maxVigor = 50;
     if (this.data.vigor === undefined) this.data.vigor = this.data.maxVigor;
   }
@@ -46,8 +45,7 @@ export class Ninja {
       ownedGear: [],
       perks: [],
       master: null,
-      day: 1,
-      trainedToday: false
+      day: 1
     };
 
     const starter = getStarterJutsu(ninjaClass, nature);
@@ -167,42 +165,66 @@ getMaxVigor(): number {
       if (this.data.level >= 10) learn("j_uchiha_sharingan", "Sharingan");
       if (this.data.level >= 25) learn("j_uchiha_genjutsu", "Genjutsu Ocular");
       if (this.data.level >= 40) learn("j_uchiha_mangekyou", "Mangekyō Sharingan");
+      if (this.data.level >= 45) learn("j_uchiha_amaterasu", "Amaterasu");
+      if (this.data.level >= 50) learn("j_uchiha_susanoo", "Susanoo");
     }
     if (this.data.clan === "Hyūga") {
       if (this.data.level >= 10) learn("j_hyuga_byakugan", "Byakugan");
       if (this.data.level >= 10) learn("j_hyuga_punho", "Punho Gentil");
       if (this.data.level >= 20) learn("j_hyuga_8trigramas", "Oito Trigramas");
       if (this.data.level >= 30) learn("j_hyuga_rotacao", "Rotação Celestial");
+      if (this.data.level >= 40) learn("j_hyuga_64palmas", "64 Palmas do Trigrama Celestial");
+      if (this.data.level >= 45) learn("j_hyuga_byakugan_absoluto", "Byakugan Absoluto");
     }
     if (this.data.clan === "Uzumaki") {
       if (this.data.level >= 10) learn("j_uzumaki_correntes", "Correntes de Chakra");
       if (this.data.level >= 30) learn("j_uzumaki_selamento", "Selamento Uzumaki");
+      if (this.data.level >= 40) learn("j_uzumaki_rasenshuriken", "Rasenshuriken");
+      if (this.data.level >= 45) learn("j_uzumaki_kyuubi", "Manto do Kyuubi");
     }
     if (this.data.clan === "Lee") {
+      if (this.data.level >= 3) learn("j_lee_senpuu", "Konoha Senpuu");
+      if (this.data.level >= 7) learn("j_lee_reppuu", "Konoha Reppuu");
       if (this.data.level >= 10) learn("j_lee_lotus1", "Lótus Primária");
+      if (this.data.level >= 12) learn("j_lee_bandagens", "Bandagens de Chakra");
       if (this.data.level >= 20) learn("j_lee_lotus2", "Lótus Oculta");
+    }
+    if (this.data.clan === "Senju") {
+      if (this.data.level >= 15) learn("j_senju_regeneracao", "Regeneração Celular");
+      if (this.data.level >= 25) learn("j_senju_hokage", "Golpe do Primeiro Hokage");
+      if (this.data.level >= 40) learn("j_senju_sabio", "Modo Sábio da Madeira");
+    }
+    if (this.data.clan === "Hatake") {
+      if (this.data.level >= 35) learn("j_hatake_raikiri", "Raikiri");
+      if (this.data.level >= 45) learn("j_hatake_sharingan", "Sharingan Copiado");
+      if (this.data.level >= 50) learn("j_hatake_kamui", "Kamui");
     }
     return newLearned;
   }
 
-  addXp(amount: number): boolean {
+  addXp(amount: number): { leveledUp: boolean; fromLevel: number; toLevel: number; skillPointsGained: number; healthGained: number; secondaryGained: number } {
     this.data.xp += amount;
-    let leveledUp = false;
+    const fromLevel = this.data.level;
+    let skillPointsGained = 0;
+    let healthGained = 0;
+    let secondaryGained = 0;
     while (this.data.xp >= this.data.xpToNextLevel) {
       this.data.xp -= this.data.xpToNextLevel;
       this.data.level++;
       this.data.xpToNextLevel = Math.floor(this.data.xpToNextLevel * 1.5);
       this.data.skillPoints += 3;
+      skillPointsGained += 3;
       this.data.maxHealth += 20;
+      healthGained += 20;
       this.data.health = this.data.maxHealth;
       this.data.maxChakra += 10;
       this.data.chakra = this.getMaxChakra();
       this.data.maxVigor += 10;
       this.data.vigor = this.getMaxVigor();
+      secondaryGained += 10;
       this.data.health = this.getMaxHealth();
-      leveledUp = true;
     }
-    return leveledUp;
+    return { leveledUp: this.data.level > fromLevel, fromLevel, toLevel: this.data.level, skillPointsGained, healthGained, secondaryGained };
   }
 
   restore(healthAmount?: number, chakraAmount?: number, fullRestore?: boolean) {

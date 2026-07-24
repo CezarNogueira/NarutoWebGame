@@ -3,6 +3,7 @@ import { Zap, Activity, Flame, Sword, Eye, Wind, Shield, Plus, RotateCcw, Coins,
 import { useGameContext } from "../contexts/GameContext";
 import { NinjaAvatar } from "../avatars";
 import Battle from "../Battle";
+import LevelUpModal from "./Levelupmodal";
 import { Screen, Stats, MissionRank } from "../types";
 
 import { CharacterCreationScreen } from "./screens/CharacterCreationScreen";
@@ -55,7 +56,8 @@ export function AppContainer() {
     createNinja, 
     resetGame, 
     allocatePoint, 
-     
+    levelUpInfo,
+    clearLevelUp,
     handleBattleEnd 
   } = useGameContext();
   const [confirmReset, setConfirmReset] = useState(false);
@@ -71,6 +73,7 @@ export function AppContainer() {
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans pb-20 md:pb-0">
       {activeMission && <Battle ninjaObj={ninja} mission={activeMission} onEnd={handleBattleEnd} />}
+      <LevelUpModal info={levelUpInfo} onClose={clearLevelUp} />
       
       {/* Navbar */}
       <nav className="bg-neutral-900 border-b border-neutral-800 sticky top-0 z-40">

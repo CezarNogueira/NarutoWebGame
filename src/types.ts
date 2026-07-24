@@ -139,6 +139,16 @@ export type BattleOutcome = {
   usedItems: Record<string, number>;
 };
 
+export type LevelUpInfo = {
+  fromLevel: number;
+  toLevel: number;
+  skillPoints: number;
+  healthGained: number;
+  secondaryGained: number;
+  secondaryLabel: "Chakra" | "Vigor";
+  newJutsus: string[];
+};
+
 export type LogEntry = { id: number; message: string; type: "success" | "danger" | "info" };
 
 export type Screen = "START" | "DASHBOARD" | "MISSIONS" | "TRAINING" | "SHOP" | "EXAM" | "MASTERS";

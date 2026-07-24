@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Ninja as NinjaModel } from "../models/Ninja";
 import { GameManager } from "../services/GameManager";
 import { CHUNIN_EXAM_ENEMIES } from "../data";
-import { LogEntry, Screen, Village, ClassType, Nature, Clan, Jutsu, Item, Mission, BattleOutcome } from "../types";
+import { LogEntry, Screen, Village, ClassType, Nature, Clan, Jutsu, Item, Mission, BattleOutcome, LevelUpInfo } from "../types";
 import { MASTERS, JUTSUS } from "../data";
 
 export function useGame() {
@@ -10,6 +10,7 @@ export function useGame() {
   const [eventLog, setEventLog] = useState<LogEntry[]>([]);
   const [screen, setScreen] = useState<Screen>("START");
   const [activeMission, setActiveMission] = useState<Mission | null>(null);
+  const [levelUpInfo, setLevelUpInfo] = useState<LevelUpInfo | null>(null);
   
   // Initialize from storage
   useEffect(() => {
@@ -30,6 +31,23 @@ export function useGame() {
 
   const setNinja = (n: NinjaModel) => {
     setNinjaState(n.clone());
+  };
+
+  const clearLevelUp = () => setLevelUpInfo(null);
+
+  const registerLevelUp = (n: NinjaModel, xpResult: { leveledUp: boolean; fromLevel: number; toLevel: number; skillPointsGained: number; healthGained: number; secondaryGained: number }) => {
+    if (!xpResult.leveledUp) return [];
+    const newJutsus = n.autoLearnNatureJutsus();
+    setLevelUpInfo({
+      fromLevel: xpResult.fromLevel,
+      toLevel: xpResult.toLevel,
+      skillPoints: xpResult.skillPointsGained,
+      healthGained: xpResult.healthGained,
+      secondaryGained: xpResult.secondaryGained,
+      secondaryLabel: n.data.clan === "Lee" ? "Vigor" : "Chakra",
+      newJutsus,
+    });
+    return newJutsus;
   };
 
   const addLog = (message: string, type: LogEntry["type"] = "info") => {
@@ -189,12 +207,12 @@ export function useGame() {
 
     ninja.data.stats[statKey] += statGain;
     ninja.data.trainedToday = true;
-    const leveledUp = ninja.addXp(xpGain);
+    const xpResult = ninja.addXp(xpGain);
     
     addLog(`Você treinou ${statName} (+${statGain}) e ganhou ${xpGain} XP!`, "info");
-    if (leveledUp) {
+    if (xpResult.leveledUp) {
       addLog(`Nível UP! Você atingiu o nível ${ninja.data.level}.`, "success");
-      const newJutsus = ninja.autoLearnNatureJutsus();
+      const newJutsus = registerLevelUp(ninja, xpResult);
       newJutsus.forEach(j => addLog(`Você despertou um novo Jutsu: ${j}!`, "success"));
     }
     
@@ -245,12 +263,12 @@ export function useGame() {
       }
       ninja.data.missionsCompleted[mission.rank]++;
       ninja.data.ryo += mission.reward;
-      const leveledUp = ninja.addXp(mission.xpReward);
-      addLog(`Missão cumprida! +${mission.reward} Ryo, +${mission.xpReward} XP.`, "success");
+      const xpResult = ninja.addXp(mission.xpReward);
+      addLog(`Missão cumprida! +${mission.reward.toLocaleString()} Ryo, +${mission.xpReward} XP.`, "success");
       
-      if (leveledUp) {
+      if (xpResult.leveledUp) {
         addLog(`Nível UP! Você atingiu o nível ${ninja.data.level}.`, "success");
-        const newJutsus = ninja.autoLearnNatureJutsus();
+        const newJutsus = registerLevelUp(ninja, xpResult);
         newJutsus.forEach(j => addLog(`Você despertou um novo Jutsu: ${j}!`, "success"));
       }
     } else if (outcome.result === "lose") {
@@ -266,6 +284,7 @@ export function useGame() {
     eventLog,
     screen,
     activeMission,
+    levelUpInfo,
     setScreen,
     setActiveMission,
     createNinja,
@@ -279,6 +298,7 @@ export function useGame() {
     takeExam,
     trainStat,
     handleBattleEnd,
+    clearLevelUp,
     addLog
   };
 }
