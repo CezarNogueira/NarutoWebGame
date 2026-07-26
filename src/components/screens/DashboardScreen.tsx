@@ -9,7 +9,7 @@ export function DashboardScreen() {
   if (!ninja) return null;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 select-none">
       <div className="grid grid-cols-1 gap-4">
         <div className="bg-neutral-950 p-5 rounded-xl border border-neutral-800 flex flex-col justify-center">
           <div className="text-neutral-400 text-sm mb-2 font-bold uppercase tracking-wider">Modo História</div>

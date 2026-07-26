@@ -31,7 +31,7 @@ function VitalBar({ label, icon, value, max, color }: { label: string; icon: Rea
 
 function StatBox({ label, statKey, value, icon, points, onAdd }: { label: string; statKey: keyof Stats; value: number; icon: React.ReactNode; points: number; onAdd: (s: keyof Stats) => void }) {
   return (
-    <div className="bg-neutral-950 p-3 rounded-lg border border-neutral-800 flex justify-between items-center group relative overflow-hidden">
+    <div className="bg-neutral-950 p-3 rounded-lg border border-neutral-800 flex justify-between items-center group relative overflow-hidden select-none">
       <div className="flex items-center gap-2 relative z-10">
         {icon}
         <div>

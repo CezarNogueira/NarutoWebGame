@@ -12,7 +12,7 @@ export default function StatsModal({ ninja, isOpen, onClose }: { ninja: Ninja, i
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 select-none">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-neutral-900 border border-neutral-700 p-6 rounded-2xl w-full max-w-sm relative z-10 shadow-2xl">
           <button onClick={onClose} className="absolute top-4 right-4 text-neutral-400 hover:text-white">
