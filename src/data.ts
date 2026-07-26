@@ -119,9 +119,6 @@ export const JUTSUS: Jutsu[] = [
   { id: "j_hatake_trovao", name: "Trovão Descendente", description: "Um poderoso raio cai sobre o inimigo.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 50, power: 85, scrollCost: -1, reqLevel: 35 },
   { id: "j_hatake_tempestade", name: "Tempestade Elétrica", description: "Diversos raios atingem o campo de batalha.", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 70, power: 110, scrollCost: -1, reqLevel: 50 },
 
-  // Kenjutsu
-  { id: "j_sword_strike", name: "Corte Preciso", description: "Golpe rápido com espada de chakra.", kind: "attack", element: "Físico", scaling: "kenjutsu", power: 46, defense: 0, scrollCost: 0, reqLevel: 1, starter: "Kenjutsu" },
-
   // Kakashi
   { id: "j_chidori", name: "Chidori", description: "Mil Pássaros (Raiton)", kind: "attack", element: "Raio", scaling: "ninjutsu", chakraCost: 25, power: 45, defense: 0, scrollCost: -1, reqLevel: 16 },
   
