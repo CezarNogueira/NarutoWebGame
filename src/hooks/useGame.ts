@@ -247,7 +247,8 @@ export function useGame() {
     ninja.data.vigor = Math.max(0, outcome.vigor);
     
     for (const [id, qty] of Object.entries(outcome.usedItems)) {
-      if (qty > 0) ninja.data.inventory[id] = qty;
+      const remaining = (ninja.data.inventory[id] ?? 0) - qty;
+      if (remaining > 0) ninja.data.inventory[id] = remaining;
       else delete ninja.data.inventory[id];
     }
     
