@@ -14,6 +14,9 @@ const variance = () => 0.85 + Math.random() * 0.3;
 // 5% base, sobe até 60% conforme a velocidade
 const calcDodgeChance = (speed: number) => Math.min(0.6, 0.05 + speed * 0.0037);
 
+// Inimigos sempre têm chance fixa de esquiva, independente da velocidade
+const ENEMY_DODGE_CHANCE = 0.05;
+
 type ActiveBuff = {
   id: string;
   type: "ocular" | "gate" | "general";
@@ -276,7 +279,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     }
 
     const { dmg, crit } = calcPlayerDamage(scaling, power, 6, customStatVal);
-    const enemyDodgeChance = calcDodgeChance(enemy.speed);
+    const enemyDodgeChance = ENEMY_DODGE_CHANCE;
     if (Math.random() < enemyDodgeChance) {
       addLog(`Você ${name}, mas ${enemy.name} se esquivou!`, "foe");
       afterPlayer(eHp, pHp, pChakra, pVigor, usedItems);
@@ -370,7 +373,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       return;
     }
     // attack
-    const enemyDodgeChance = Math.min(0.8, 0.5 + (enemy.speed * 0.001));
+    const enemyDodgeChance = ENEMY_DODGE_CHANCE;
     if (Math.random() < enemyDodgeChance) {
       addLog(`Você usou ${j.name}, mas ${enemy.name} se esquivou!`, "foe");
       afterPlayer(eHp, currentHp, newChakra, newVigor, usedItems);
