@@ -7,7 +7,28 @@ import { ITEMS, JUTSUS } from "../../data";
 export function ShopScreen() {
   const { ninja, buyItem, learnJutsu } = useGameContext();
   const [shopTab, setShopTab] = useState<"itens" | "pergaminhos">("itens");
-  
+  const [justBought, setJustBought] = useState<string | null>(null);
+
+  const handleBuyItem = (item: any) => {
+    if (!ninja) return;
+    const ryoBefore = ninja.data.ryo;
+    buyItem(item);
+    if (ninja.data.ryo < ryoBefore) {
+      setJustBought(item.id);
+      setTimeout(() => setJustBought(null), 300);
+    }
+  };
+
+  const handleLearnJutsu = (j: any) => {
+    if (!ninja) return;
+    const ryoBefore = ninja.data.ryo;
+    learnJutsu(j);
+    if (ninja.data.ryo < ryoBefore) {
+      setJustBought(j.id);
+      setTimeout(() => setJustBought(null), 300);
+    }
+  };
+
   if (!ninja) return null;
 
   return (
@@ -32,8 +53,8 @@ export function ShopScreen() {
                 </div>
                 <button
                   disabled={owned || ninja.data.ryo < item.price}
-                  onClick={() => buyItem(item)}
-                  className="bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 text-white font-bold py-1.5 px-3 rounded-lg transition-colors text-xs flex-shrink-0"
+                  onClick={() => handleBuyItem(item)}
+                  className={`disabled:opacity-40 text-white font-bold py-1.5 px-3 rounded-lg transition-all duration-200 text-xs flex-shrink-0 ${justBought === item.id ? "bg-green-600 scale-105" : "bg-neutral-800 hover:bg-neutral-700"}`}
                 >
                   {owned ? "Adquirido" : `${item.price} Ryo`}
                 </button>
@@ -57,8 +78,8 @@ export function ShopScreen() {
                 </div>
                 <button
                   disabled={known || locked || ninja.data.ryo < j.scrollCost}
-                  onClick={() => learnJutsu(j)}
-                  className="bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 text-white font-bold py-1.5 px-3 rounded-lg transition-colors text-xs flex-shrink-0"
+                  onClick={() => handleLearnJutsu(j)}
+                  className={`disabled:opacity-40 text-white font-bold py-1.5 px-3 rounded-lg transition-all duration-200 text-xs flex-shrink-0 ${justBought === j.id ? "bg-green-600 scale-105" : "bg-neutral-800 hover:bg-neutral-700"}`}
                 >
                   {known ? "Aprendido" : locked ? `Nv ${j.reqLevel}` : `${j.scrollCost} Ryo`}
                 </button>

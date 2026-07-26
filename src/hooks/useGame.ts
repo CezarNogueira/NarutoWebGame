@@ -64,6 +64,9 @@ export function useGame() {
   const allocatePoint = (stat: keyof NinjaModel["data"]["stats"]) => {
     if (!ninja || ninja.data.skillPoints <= 0) return;
     ninja.data.stats[stat]++;
+    if (stat === "ninjutsu") {
+        ninja.data.maxChakra += 1;
+    }
     ninja.data.skillPoints--;
     setNinja(ninja);
   };
@@ -145,6 +148,14 @@ export function useGame() {
     if (ninja.data.ryo < j.scrollCost) return addLog("Ryo insuficiente para o pergaminho.", "danger");
     
     ninja.data.ryo -= j.scrollCost;
+    
+    // Sharingan progression logic
+    if (j.id === "j_uchiha_sharingan2t") {
+      ninja.data.knownJutsus = ninja.data.knownJutsus.filter(id => id !== "j_uchiha_sharingan1t");
+    } else if (j.id === "j_uchiha_sharingan3t") {
+      ninja.data.knownJutsus = ninja.data.knownJutsus.filter(id => id !== "j_uchiha_sharingan2t");
+    }
+    
     ninja.data.knownJutsus.push(j.id);
     addLog(`Você aprendeu ${j.name}!`, "success");
     setNinja(ninja);
@@ -206,6 +217,9 @@ export function useGame() {
     }
 
     ninja.data.stats[statKey] += statGain;
+    if (statKey === "ninjutsu") {
+        ninja.data.maxChakra += statGain;
+    }
     ninja.data.trainedToday = true;
     const xpResult = ninja.addXp(xpGain);
     
@@ -238,6 +252,23 @@ export function useGame() {
     }
     
     if (outcome.result === "win") {
+      if ((mission as any).isStory || mission.id.startsWith("sm_")) {
+        const idx = (mission as any).storyIndex ?? parseInt(mission.id.split("_")[1]) - 1;
+        if (ninja.data.storyProgress === undefined) ninja.data.storyProgress = 0;
+        if (idx === ninja.data.storyProgress) {
+          ninja.data.storyProgress++;
+        }
+        ninja.data.ryo += mission.reward;
+        const xpResult = ninja.addXp(mission.xpReward);
+        addLog(`Capítulo concluído! +${mission.reward.toLocaleString()} Ryo, +${mission.xpReward} XP.`, "success");
+        if (xpResult.leveledUp) {
+          addLog(`Nível UP! Você atingiu o nível ${ninja.data.level}.`, "success");
+          const newJutsus = registerLevelUp(ninja, xpResult);
+          if (newJutsus.length > 0) addLog(`Você aprendeu ${newJutsus.length} novo(s) jutsu(s)!`, "info");
+        }
+        setNinja(ninja);
+        return;
+      }
       if (mission.id.startsWith("chunin_exam_")) {
         const currentBattle = parseInt(mission.id.split("_")[2]);
         if (currentBattle < 5) {

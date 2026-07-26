@@ -61,10 +61,10 @@ export const JUTSUS: Jutsu[] = [
 
   // ==================== UCHIHA ====================
   // Modos
-  { id: "j_uchiha_sharingan1t", name: "Sharingan 1 Tomoe", description: "Desperta o básico da percepção visual", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.1, scrollCost: -1, reqLevel: 5 },
-  { id: "j_uchiha_sharingan2t", name: "Sharingan 2 Tomoes", description: "Melhora a capacidade de previsão do Sharingan", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
-  { id: "j_uchiha_sharingan3t", name: "Sharingan 3 Tomoes", description: "O nível máximo do Sharingan regular", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.3, scrollCost: -1, reqLevel: 16 },
-  { id: "j_uchiha_mangekyou", name: "Mangekyō Sharingan", description: "Poder ocular supremo", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 50, power: 0, buffTurns: 15, buffAmount: 0.6, scrollCost: -1, reqLevel: 40 },
+  { id: "j_uchiha_sharingan1t", name: "Sharingan 1 Tomoe", description: "Desperta o básico da percepção, buffando Taijutsu, Kenjutsu, Genjutsu e Ninjutsu", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.1, scrollCost: -1, reqLevel: 5 },
+  { id: "j_uchiha_sharingan2t", name: "Sharingan 2 Tomoes", description: "Melhora a previsão, buffando Taijutsu, Kenjutsu, Genjutsu e Ninjutsu", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.2, scrollCost: -1, reqLevel: 10 },
+  { id: "j_uchiha_sharingan3t", name: "Sharingan 3 Tomoes", description: "Nível máximo regular, buffando Taijutsu, Kenjutsu, Genjutsu e Ninjutsu", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 15, power: 0, buffTurns: 15, buffAmount: 0.3, scrollCost: -1, reqLevel: 16 },
+  { id: "j_uchiha_mangekyou", name: "Mangekyō Sharingan", description: "Poder ocular supremo, buffando Taijutsu, Kenjutsu, Genjutsu e Ninjutsu", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 50, power: 0, buffTurns: 15, buffAmount: 0.6, scrollCost: -1, reqLevel: 40 },
   { id: "j_uchiha_susanoo", name: "Susanoo", description: "Modo: invoca uma armadura espectral", kind: "buff", element: "Ilusão", scaling: "genjutsu", chakraCost: 90, power: 0, buffTurns: 4, buffAmount: 1.0, defense: 180, scrollCost: -1, reqLevel: 50 },
 
   // Ataques
@@ -257,22 +257,14 @@ export const getStarterJutsu = (ninjaClass: ClassType, nature: import("./types")
 // ------------------------------------------------------------------
 export const ITEMS: Item[] = [
 
-  { id: "w_katana", name: "Katana", description: "Arma branca afiada (Poder 34, 20 usos)", price: 7500, kind: "weapon", weaponPower: 34, qtyPerPurchase: 20 },
-  { id: "w_kunai", name: "Kunai", description: "Lâmina arremessável (Poder 14, 3 usos)", price: 300, kind: "weapon", weaponPower: 14, qtyPerPurchase: 3 },
-  { id: "w_shuriken", name: "Shurikens", description: "Lâminas giratórias (Poder 9, 1 uso)", price: 50, kind: "weapon", weaponPower: 9, qtyPerPurchase: 1 },
-  { id: "w_fuuma", name: "Fuuma Shuriken", description: "Shuriken de Vento Demoníaco (Poder 30, 1 uso)", price: 1200, kind: "weapon", weaponPower: 30, qtyPerPurchase: 1 },
+  { id: "w_katana", name: "Katana", description: "Arma branca afiada (Poder 34, 20 usos por batalha)", price: 7500, kind: "gear" },
+  { id: "w_shuriken", name: "Shurikens", description: "Lâminas giratórias (Poder 9, 3 usos por batalha)", price: 50, kind: "gear" },
+  { id: "w_fuuma", name: "Fuuma Shuriken", description: "Shuriken de Vento Demoníaco (Poder 30, 2 usos por batalha)", price: 1200, kind: "gear" },
 
   { id: "kit_medico", name: "Kit Médico", description: "Restaura 60 de Vida. Usável em batalha.", price: 300, kind: "consumable", healAmount: 60, usableInBattle: true },
   { id: "pilula_soldado", name: "Pílula do Soldado", description: "Restaura 50 de Chakra. Usável em batalha.", price: 350, kind: "consumable", chakraAmount: 50, usableInBattle: true },
   { id: "pilula_militar", name: "Pílula Militar", description: "Restaura Vida e Chakra completos. Usável em batalha.", price: 1400, kind: "consumable", fullRestore: true, usableInBattle: true },
 
-  { id: "sandalias_ninja", name: "Sandálias Ninja", description: "+8 de Velocidade permanente.", price: 3500, kind: "gear", statBoost: { stat: "speed", value: 8 } },
-  { id: "faixas_treino", name: "Faixas de Treino", description: "+8 de Resistência permanente.", price: 3000, kind: "gear", statBoost: { stat: "stamina", value: 8 } },
-  { id: "espada_basica", name: "Espada Básica", description: "+8 de Kenjutsu permanente.", price: 3500, kind: "gear", statBoost: { stat: "kenjutsu", value: 8 } },
-  { id: "luvas_peso", name: "Luvas de Peso", description: "+8 de Taijutsu permanente.", price: 4000, kind: "gear", statBoost: { stat: "taijutsu", value: 8 } },
-  { id: "pergaminho_elemental", name: "Pergaminho Elemental", description: "+8 de Ninjutsu permanente.", price: 4000, kind: "gear", statBoost: { stat: "ninjutsu", value: 8 } },
-  { id: "espelho_ilusorio", name: "Espelho Ilusório", description: "+8 de Genjutsu permanente.", price: 4000, kind: "gear", statBoost: { stat: "genjutsu", value: 8 } },
-  { id: "colete_jonin", name: "Colete Jonin", description: "+50 de Vida Máxima permanente.", price: 6500, kind: "gear", healthBoost: 50 },
 ];
 
 // ------------------------------------------------------------------

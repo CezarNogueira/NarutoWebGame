@@ -1,12 +1,12 @@
 import React from "react";
 
-type HairStyle = "spiky" | "short" | "bun" | "ponytail" | "long" | "mohawk";
+export type HairStyle = "spiky" | "short" | "bun" | "ponytail" | "long" | "mohawk";
 
-type AvatarPreset = { id: string; clan: string; skin: string; hair: string; style: HairStyle; band: string; eye: string; cloth: string; gender: "M" | "F"; };
+export type AvatarPreset = { id: string; clan: string; skin: string; hair: string; style: HairStyle; band: string; eye: string; cloth: string; gender: "M" | "F"; };
 
-const SKIN = { light: "#f2c9a0", med: "#d69f7e", tan: "#c2895f", deep: "#8d5a3c", pale: "#f7d9bf" };
-const HAIR = { blonde: "#f4d35e", black: "#2b2b33", brown: "#6b4423", red: "#c1443c", pink: "#ec9ec5", white: "#e9ebf0", silver: "#c9ccd3", blue: "#3f6fb5" };
-const BAND = { blue: "#2f6fb0", red: "#b03a3a", black: "#3a3a44", green: "#3f8f5a", orange: "#c9772f" };
+export const SKIN = { light: "#f2c9a0", med: "#d69f7e", tan: "#c2895f", deep: "#8d5a3c", pale: "#f7d9bf" };
+export const HAIR = { blonde: "#f4d35e", black: "#2b2b33", brown: "#6b4423", red: "#c1443c", pink: "#ec9ec5", white: "#e9ebf0", silver: "#c9ccd3", blue: "#3f6fb5" };
+export const BAND = { blue: "#2f6fb0", red: "#b03a3a", black: "#3a3a44", green: "#3f8f5a", orange: "#c9772f" };
 
 export const AVATARS: AvatarPreset[] = [
   // Uchiha (Pele Clara, Cabelo Preto, Olho Preto)
@@ -59,6 +59,8 @@ export const AVATARS: AvatarPreset[] = [
 ];
 
 export function getAvatar(id: string): AvatarPreset {
+  if (!id) return AVATARS[0];
+  if (id.startsWith("{")) { try { return JSON.parse(id); } catch (e) {} }
   return AVATARS.find((a) => a.id === id) ?? AVATARS[0];
 }
 

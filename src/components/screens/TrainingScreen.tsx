@@ -31,23 +31,25 @@ export function TrainingScreen() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Ninjutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("ninjutsu", "Ninjutsu", 5, 1, 10)} icon={<Flame className="w-5 h-5 text-red-500" />} />
+        <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Ninjutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("ninjutsu", "Ninjutsu", 5, 1, 10)} description="(+ Chakra)" icon={<Flame className="w-5 h-5 text-red-500" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Taijutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("taijutsu", "Taijutsu", 5, 1, 10)} icon={<HandFist className="w-5 h-5 text-gray-400" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Genjutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("genjutsu", "Genjutsu", 5, 1, 10)} icon={<Eye className="w-5 h-5 text-purple-500" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Treinar Kenjutsu" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("kenjutsu", "Kenjutsu", 5, 1, 5)} icon={<Swords className="w-5 h-5 text-pink-400" />} />
-        <TrainingCard disabled={ninja.data.trainedToday} title="Correr com Pesos" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("speed", "Velocidade", 5, 1, 10)} icon={<Wind className="w-5 h-5 text-teal-400" />} />
+        <TrainingCard disabled={ninja.data.trainedToday} title="Correr com Pesos" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("speed", "Velocidade", 5, 1, 10)} description="(+ Esquiva)" icon={<Wind className="w-5 h-5 text-teal-400" />} />
         <TrainingCard disabled={ninja.data.trainedToday} title="Meditação na Cachoeira" cost={30} resourceLabel={resourceLabel} onTrain={() => trainStat("stamina", "Resistência", 5, 1, 5)} icon={<Shield className="w-5 h-5 text-blue-300" />} />
       </div>
     </motion.div>
   );
 }
 
-function TrainingCard({ title, cost, resourceLabel, onTrain, icon, disabled }: { title: string; cost: number; resourceLabel: string; onTrain: () => void; icon: React.ReactNode, disabled?: boolean }) {
+function TrainingCard({ title, cost, resourceLabel, onTrain, icon, disabled, description }: { title: string; cost: number; resourceLabel: string; onTrain: () => void; icon: React.ReactNode, disabled?: boolean, description?: string }) {
   return (
     <div className="bg-neutral-950 p-4 rounded-xl border border-neutral-800 flex flex-col justify-between items-center text-center">
       <div className="bg-neutral-900 p-3 rounded-full mb-3">{icon}</div>
       <h3 className="font-bold text-sm mb-1">{title}</h3>
-      <div className="text-xs text-neutral-400 mb-4">{cost} {resourceLabel}</div>
+      <div className="text-xs text-neutral-400 mb-1">{cost} {resourceLabel}</div>
+      {description && <div className="text-[10px] text-green-400 font-bold mb-3">{description}</div>}
+      {!description && <div className="mb-4"></div>}
       <button onClick={onTrain} disabled={disabled} className={`w-full font-bold py-2 rounded-lg transition-colors text-xs ${disabled ? "bg-neutral-900 text-neutral-600 cursor-not-allowed" : "bg-neutral-800 hover:bg-neutral-700 text-white"}`}>
         Treinar
       </button>

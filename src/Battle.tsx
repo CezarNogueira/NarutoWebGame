@@ -7,9 +7,23 @@ import { motion, AnimatePresence } from "motion/react";
 import { Swords, Sparkles, FlaskConical, Footprints, Heart, Zap, ShieldCheck } from "lucide-react";
 
 type Phase = "player" | "enemy" | "over";
-type Menu = "root" | "jutsu" | "item";
+type Menu = "root" | "jutsu" | "item" | "attack";
 
 const variance = () => 0.85 + Math.random() * 0.3;
+
+type ActiveBuff = {
+  id: string;
+  type: "ocular" | "gate" | "general";
+  turns: number;
+  amount: number;
+  name: string;
+};
+
+const getBuffType = (id: string): "ocular" | "gate" | "general" => {
+  if (id.startsWith("j_uchiha_sharingan") || id === "j_uchiha_mangekyou" || id === "j_uchiha_susanoo" || id === "j_hyuga_byakugan" || id === "j_uchiha_reflexo") return "ocular";
+  if (id.startsWith("j_gate_")) return "gate";
+  return "general";
+};
 
 export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaModel; mission: Mission; onEnd: (o: BattleOutcome) => void }) {
   const ninja = ninjaObj.data;
@@ -20,8 +34,7 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const [pVigor, setPVigor] = useState(ninja.vigor);
   const isLee = ninja.clan === "Lee";
   const [eHp, setEHp] = useState(enemy.maxHp);
-  const [boostTurns, setBoostTurns] = useState(0);
-  const [boostAmt, setBoostAmt] = useState(0);
+  const [activeBuffs, setActiveBuffs] = useState<ActiveBuff[]>([]);
   const [paralyzeTurns, setParalyzeTurns] = useState(0);
   const [pParalyzeTurns, setPParalyzeTurns] = useState(0);
   const [eBoostTurns, setEBoostTurns] = useState(0);
@@ -36,6 +49,7 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const [menu, setMenu] = useState<Menu>("root");
   const [shake, setShake] = useState<"" | "foe" | "you">("");
   const [outcome, setOutcome] = useState<BattleOutcome | null>(null);
+  const [weaponUses, setWeaponUses] = useState<Record<string, number>>({});
 
   const playerDefense = Math.round(ninjaObj.getTaijutsuStat() * 0.12 + ninja.level * 1.2) + Math.floor(ninja.stats.stamina / 5);
 
@@ -48,14 +62,24 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   };
 
   // ---- dano do jogador ----
-const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, critBonus = 0) => {
-    let statVal = ninja.stats[scaling];
-    if (scaling === "taijutsu") statVal = ninjaObj.getTaijutsuStat();
-    else if (scaling === "kenjutsu") statVal = ninjaObj.getKenjutsuStat();
-    else if (scaling === "speed") statVal = ninjaObj.getSpeedStat();
-    else if (scaling === "ninjutsu") statVal = ninjaObj.getNinjutsuStat();
+const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, critBonus = 0, customStatVal?: number) => {
+    let statVal = customStatVal ?? ninja.stats[scaling];
+    if (customStatVal === undefined) {
+        if (scaling === "taijutsu") statVal = ninjaObj.getTaijutsuStat();
+        else if (scaling === "kenjutsu") statVal = ninjaObj.getKenjutsuStat();
+        else if (scaling === "speed") statVal = ninjaObj.getSpeedStat();
+        else if (scaling === "ninjutsu") statVal = ninjaObj.getNinjutsuStat();
+    }
     let dmg = (statVal * (power / 60) + ninja.level * 2) * variance();
-    if (boostTurns > 0) dmg *= 1 + boostAmt;
+    const ocularBoost = activeBuffs.filter(b => b.type === "ocular").reduce((sum, b) => sum + b.amount, 0);
+    const otherBoost = activeBuffs.filter(b => b.type !== "ocular").reduce((sum, b) => sum + b.amount, 0);
+    
+    let totalBoost = otherBoost;
+    if (["taijutsu", "kenjutsu", "ninjutsu", "genjutsu"].includes(scaling)) {
+        totalBoost += ocularBoost;
+    }
+    
+    if (totalBoost > 0) dmg *= 1 + totalBoost;
 
     let clanMult = 1.0;
     if (ninja.clan === "Uchiha") {
@@ -87,11 +111,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     }
     setEHp(newEHp);
     
-    let currentBoostTurns = boostTurns;
-    if (currentBoostTurns > 0) {
-      currentBoostTurns -= 1;
-      setBoostTurns(currentBoostTurns);
-    }
+    setActiveBuffs(prev => prev.map(b => ({ ...b, turns: b.turns - 1 })).filter(b => b.turns > 0));
 
     if (deathTimer !== null) {
       const newTimer = deathTimer - 1;
@@ -169,6 +189,15 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       addLog(`Seu escudo bloqueou parte do dano!`, `info`);
       setTempShield(0);
     }
+    
+    const playerDodgeChance = Math.min(0.8, 0.5 + (ninjaObj.getSpeedStat() * 0.001));
+    if (Math.random() < playerDodgeChance) {
+      addLog(`${enemy.name} usou ${move.name}, mas você se esquivou!`, "you");
+      setPhase("player");
+      setMenu("root");
+      return;
+    }
+
     const crit = Math.random() < 0.08;
     if (crit) dmg *= 1.7;
     dmg = Math.max(1, Math.round(dmg));
@@ -188,11 +217,69 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
   };
 
   // ---- ações do jogador ----
-  const basicAttack = () => {
+  const performPhysicalAttack = (type: "soco" | "chute" | "katana" | "kunai" | "shuriken" | "fuuma") => {
     if (phase !== "player") return;
+
+    if (type === "katana" && (weaponUses["katana"] || 0) >= 20) {
+      addLog("Você já usou a Katana 20 vezes nesta batalha!", "info");
+      return;
+    }
+    if (type === "shuriken" && (weaponUses["shuriken"] || 0) >= 3) {
+      addLog("Você já usou Shuriken 3 vezes nesta batalha!", "info");
+      return;
+    }
+    if (type === "fuuma" && (weaponUses["fuuma"] || 0) >= 2) {
+      addLog("Você já usou a Fuuma Shuriken 2 vezes nesta batalha!", "info");
+      return;
+    }
+
+    if (["katana", "shuriken", "fuuma"].includes(type)) {
+      setWeaponUses(prev => ({ ...prev, [type]: (prev[type] || 0) + 1 }));
+    }
+
     setPhase("enemy");
-    const { dmg, crit } = calcPlayerDamage("taijutsu", 5, 6);
-    addLog(`Você atacou${crit ? " (CRÍTICO!)" : ""} e causou ${dmg} de dano.`, "you");
+    setMenu("root");
+
+    let scaling: keyof NinjaData["stats"] = "taijutsu";
+    let power = 5;
+    let name = "atacou";
+    let customStatVal: number | undefined = undefined;
+
+    if (type === "soco") {
+        scaling = "taijutsu";
+        power = 15;
+        name = "deu um Soco";
+    } else if (type === "chute") {
+        scaling = "speed";
+        power = 12;
+        name = "deu um Chute";
+        customStatVal = Math.round(ninjaObj.getTaijutsuStat() * 0.5 + ninjaObj.getSpeedStat());
+    } else if (type === "katana") {
+        scaling = "kenjutsu";
+        power = 34; // same as item
+        name = "atacou com a Katana";
+    } else if (type === "kunai") {
+        scaling = "kenjutsu";
+        power = 14;
+        name = "arremessou uma Kunai";
+    } else if (type === "shuriken") {
+        scaling = "kenjutsu";
+        power = 9;
+        name = "lançou Shurikens";
+    } else if (type === "fuuma") {
+        scaling = "kenjutsu";
+        power = 30;
+        name = "arremessou a Fuuma Shuriken";
+    }
+
+    const { dmg, crit } = calcPlayerDamage(scaling, power, 6, customStatVal);
+    const enemyDodgeChance = Math.min(0.8, 0.5 + (enemy.speed * 0.001));
+    if (Math.random() < enemyDodgeChance) {
+      addLog(`Você ${name}, mas ${enemy.name} se esquivou!`, "foe");
+      afterPlayer(eHp, pHp, pChakra, pVigor, usedItems);
+      return;
+    }
+    addLog(`Você ${name}${crit ? " (CRÍTICO!)" : ""} e causou ${dmg} de dano.`, "you");
     afterPlayer(eHp - dmg, pHp, pChakra, pVigor, usedItems);
   };
 
@@ -250,9 +337,16 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     
     if (j.kind === "buff") {
       if (j.buffTurns || j.buffAmount) {
-        setBoostTurns(j.buffTurns ?? 3);
-        setBoostAmt(j.buffAmount ?? 0.5);
-        addLog(`Você usou ${j.name}! Dano aumentado por ${j.buffTurns ?? 3} turnos.`, "you");
+        const bType = getBuffType(j.id);
+        setActiveBuffs(prev => {
+          let next = [...prev];
+          if (bType === "ocular" || bType === "gate") {
+            next = next.filter(b => b.type !== bType);
+          }
+          next.push({ id: j.id, type: bType, turns: j.buffTurns ?? 3, amount: j.buffAmount ?? 0.5, name: j.name });
+          return next;
+        });
+        addLog(`Você usou ${j.name}! Modificador ativado por ${j.buffTurns ?? 3} turnos.`, "you");
       } else {
         addLog(`Você usou ${j.name}!`, "you");
       }
@@ -273,6 +367,12 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       return;
     }
     // attack
+    const enemyDodgeChance = Math.min(0.8, 0.5 + (enemy.speed * 0.001));
+    if (Math.random() < enemyDodgeChance) {
+      addLog(`Você usou ${j.name}, mas ${enemy.name} se esquivou!`, "foe");
+      afterPlayer(eHp, currentHp, newChakra, newVigor, usedItems);
+      return;
+    }
     const { dmg, crit } = calcPlayerDamage(j.scaling, j.power, j.critBonus ?? 0);
     addLog(`Você usou ${j.name}${crit ? " (CRÍTICO!)" : ""} e causou ${dmg} de dano.`, "you");
     afterPlayer(eHp - dmg, currentHp, newChakra, newVigor, usedItems);
@@ -362,11 +462,11 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
               ) : (
                 <Bar value={pChakra} max={ninjaObj.getMaxChakra()} color="bg-blue-500" icon={<Zap className="w-3 h-3 text-blue-400" />} />
               )}
-              {boostTurns > 0 && (
-                <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
-                  <ShieldCheck className="w-3 h-3" /> Dano +{Math.round(boostAmt * 100)}% ({boostTurns})
+              {activeBuffs.map(b => (
+                <div key={b.id} className="mt-1 mr-1 inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">
+                  <ShieldCheck className="w-3 h-3" /> {b.name} {b.amount > 0 ? `+${Math.round(b.amount * 100)}%` : ""} ({b.turns}T)
                 </div>
-              )}
+              ))}
             </div>
           </motion.div>
 
@@ -402,9 +502,55 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
         <div className="p-4 min-h-[132px]">
           {phase === "over" && outcome ? (
             <ResultPanel outcome={outcome} mission={mission} onContinue={() => onEnd(outcome)} />
+          ) : menu === "attack" ? (
+            <div className="space-y-3">
+              <div className="text-sm font-bold text-neutral-400 uppercase tracking-wider mb-2">Taijutsu</div>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <button onClick={() => performPhysicalAttack("soco")} className="bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg text-sm font-bold border border-neutral-700 transition-colors text-left">
+                  <div className="text-white">Soco</div>
+                  <div className="text-[10px] text-neutral-400 font-normal">Foco em Taijutsu</div>
+                </button>
+                <button onClick={() => performPhysicalAttack("chute")} className="bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg text-sm font-bold border border-neutral-700 transition-colors text-left">
+                  <div className="text-white">Chute</div>
+                  <div className="text-[10px] text-neutral-400 font-normal">Taijutsu + Velocidade</div>
+                </button>
+              </div>
+
+              <div className="text-sm font-bold text-neutral-400 uppercase tracking-wider mb-2">Kenjutsu (Armas)</div>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {ninja.inventory["w_katana"] || ninja.ownedGear.includes("w_katana") ? (
+                  <button onClick={() => performPhysicalAttack("katana")} disabled={(weaponUses["katana"] || 0) >= 20} className={`bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg text-sm font-bold border border-neutral-700 transition-colors text-left ${(weaponUses["katana"] || 0) >= 20 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <div className="text-white">Ataque de Katana</div>
+                    <div className="text-[10px] text-neutral-400 font-normal">Kenjutsu ({(weaponUses["katana"] || 0)}/20)</div>
+                  </button>
+                ) : null}
+                {ninja.ninjaClass === "Kenjutsu" || ninja.inventory["w_kunai"] || ninja.ownedGear.includes("w_kunai") || ninja.inventory["i_kunai"] ? (
+                  <button onClick={() => performPhysicalAttack("kunai")} className="bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg text-sm font-bold border border-neutral-700 transition-colors text-left">
+                    <div className="text-white">Ataque de Kunai</div>
+                    <div className="text-[10px] text-neutral-400 font-normal">Kenjutsu (Poder 14)</div>
+                  </button>
+                ) : null}
+                {ninja.inventory["w_shuriken"] || ninja.ownedGear.includes("w_shuriken") ? (
+                  <button onClick={() => performPhysicalAttack("shuriken")} disabled={(weaponUses["shuriken"] || 0) >= 3} className={`bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg text-sm font-bold border border-neutral-700 transition-colors text-left ${(weaponUses["shuriken"] || 0) >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <div className="text-white">Ataque de Shuriken</div>
+                    <div className="text-[10px] text-neutral-400 font-normal">Kenjutsu ({(weaponUses["shuriken"] || 0)}/3)</div>
+                  </button>
+                ) : null}
+                {ninja.inventory["w_fuuma"] || ninja.ownedGear.includes("w_fuuma") ? (
+                  <button onClick={() => performPhysicalAttack("fuuma")} disabled={(weaponUses["fuuma"] || 0) >= 2} className={`bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg text-sm font-bold border border-neutral-700 transition-colors text-left ${(weaponUses["fuuma"] || 0) >= 2 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <div className="text-white">Fuuma Shuriken</div>
+                    <div className="text-[10px] text-neutral-400 font-normal">Kenjutsu ({(weaponUses["fuuma"] || 0)}/2)</div>
+                  </button>
+                ) : null}
+                {ninja.ninjaClass !== "Kenjutsu" && !ninja.inventory["w_katana"] && !ninja.ownedGear.includes("w_katana") && !ninja.inventory["w_kunai"] && !ninja.ownedGear.includes("w_kunai") && !ninja.inventory["i_kunai"] && !ninja.inventory["w_shuriken"] && !ninja.ownedGear.includes("w_shuriken") && !ninja.inventory["w_fuuma"] && !ninja.ownedGear.includes("w_fuuma") && (
+                  <div className="col-span-2 text-xs text-neutral-500 italic p-2 text-center">Nenhuma arma equipada ou no inventário.</div>
+                )}
+              </div>
+              <BackBtn onClick={() => setMenu("root")} />
+            </div>
           ) : menu === "root" ? (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <ActionBtn disabled={phase !== "player"} onClick={basicAttack} icon={<Swords className="w-5 h-5" />} label="Atacar" hint="Grátis" />
+              <ActionBtn disabled={phase !== "player"} onClick={() => setMenu("attack")} icon={<Swords className="w-5 h-5" />} label="Atacar" hint="Grátis" />
               <ActionBtn disabled={phase !== "player"} onClick={() => setMenu("jutsu")} icon={<Sparkles className="w-5 h-5" />} label="Jutsu" hint={`${knownJutsus.length} disp.`} />
               <ActionBtn disabled={phase !== "player"} onClick={() => setMenu("item")} icon={<FlaskConical className="w-5 h-5" />} label="Item" hint={`${battleItems.length} disp.`} />
               <ActionBtn disabled={phase !== "player"} onClick={flee} icon={<Footprints className="w-5 h-5" />} label="Fugir" hint="Escapar" />

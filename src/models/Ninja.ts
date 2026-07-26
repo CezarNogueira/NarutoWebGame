@@ -41,7 +41,7 @@ export class Ninja {
       skillPoints: 0,
       missionsCompleted: { "Sem Rank": 0, D: 0, C: 0, B: 0, A: 0, S: 0 },
       knownJutsus: [],
-      inventory: { i_ramen_cup: 3, i_kunai: 5 },
+      inventory: { i_ramen_cup: 3 },
       ownedGear: [],
       perks: [],
       master: null,

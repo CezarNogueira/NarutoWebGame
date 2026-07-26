@@ -129,6 +129,7 @@ export type Ninja = {
   master?: string | null; // id do mestre
   day: number;
   trainedToday?: boolean;
+  storyProgress?: number;
 };
 
 export type BattleOutcome = {

@@ -11,14 +11,21 @@ export function DashboardScreen() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <div className="grid grid-cols-1 gap-4">
-        <div className="bg-neutral-950 p-5 rounded-xl border border-neutral-800 flex items-center justify-between">
-          <div>
-            <div className="text-neutral-400 text-sm mb-1">Ryo</div>
-            <div className="text-2xl font-bold text-yellow-500">{ninja.data.ryo.toLocaleString()}</div>
+        <div className="bg-neutral-950 p-5 rounded-xl border border-neutral-800 flex flex-col justify-center">
+          <div className="text-neutral-400 text-sm mb-2 font-bold uppercase tracking-wider">Modo História</div>
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-bold text-white">Capítulo {ninja.data.storyProgress ? ninja.data.storyProgress + 1 : 1}</div>
+            <div className="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-500/20">
+              {ninja.data.storyProgress || 0} / 50
+            </div>
           </div>
-          <div className="bg-yellow-500/10 p-3 rounded-full"><Coins className="text-yellow-500 w-6 h-6" /></div>
+          <div className="w-full bg-neutral-800 h-1.5 rounded-full mt-3 overflow-hidden">
+            <div className="bg-red-500 h-full" style={{ width: `${((ninja.data.storyProgress || 0) / 50) * 100}%` }}></div>
+          </div>
         </div>
+
       </div>
+
 
       <div className="bg-neutral-950 p-6 rounded-xl border border-neutral-800">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Sparkles className="w-5 h-5 text-red-400" /> Jutsus e Habilidades</h3>
@@ -50,7 +57,7 @@ export function DashboardScreen() {
               const j = JUTSUS.find((x) => x.id === id);
               if (!j) return null;
               if (j.scaling === "genjutsu" || j.element === "Ilusão") {
-                if (j.name !== "Sharingan" && j.name !== "Mangekyō Sharingan") {
+                if (!j.name.includes("Sharingan") && !j.name.includes("Susanoo")) {
                   return (
                     <span key={id} className="text-xs font-semibold bg-purple-900/40 border border-purple-800 px-3 py-1.5 rounded-full">
                       {j.name}
@@ -72,7 +79,7 @@ export function DashboardScreen() {
               if (!j) return null;
               const isNature = j.element === "Fogo" || j.element === "Água" || j.element === "Terra" || j.element === "Vento" || j.element === "Raio";
               const isGenjutsu = j.scaling === "genjutsu" || j.element === "Ilusão";
-              const isModo = j.name.includes("Modo") || j.name.includes("Sharingan") || j.name.includes("Byakugan") || j.name.includes("Portão");
+              const isModo = j.name.includes("Modo") || j.name.includes("Sharingan") || j.name.includes("Byakugan") || j.name.includes("Portão") || j.name.includes("Susanoo");
               
               if (!isNature && !isGenjutsu && !isModo) {
                 return (
@@ -93,7 +100,7 @@ export function DashboardScreen() {
             {ninja.data.knownJutsus.map((id) => {
               const j = JUTSUS.find((x) => x.id === id);
               if (!j) return null;
-              const isModo = j.name.includes("Modo") || j.name.includes("Sharingan") || j.name.includes("Byakugan") || j.name.includes("Portão");
+              const isModo = j.name.includes("Modo") || j.name.includes("Sharingan") || j.name.includes("Byakugan") || j.name.includes("Portão") || j.name.includes("Susanoo");
               if (isModo) {
                 return (
                   <span key={id} className="text-xs font-semibold bg-red-900/40 border border-red-800 px-3 py-1.5 rounded-full text-red-200">

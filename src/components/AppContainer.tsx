@@ -4,6 +4,7 @@ import { useGameContext } from "../contexts/GameContext";
 import { NinjaAvatar } from "../avatars";
 import Battle from "../Battle";
 import LevelUpModal from "./Levelupmodal";
+import StatsModal from "./StatsModal";
 import { Screen, Stats, MissionRank } from "../types";
 
 import { CharacterCreationScreen } from "./screens/CharacterCreationScreen";
@@ -61,6 +62,7 @@ export function AppContainer() {
     handleBattleEnd 
   } = useGameContext();
   const [confirmReset, setConfirmReset] = useState(false);
+  const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
 
   if (screen === "START" || !ninja) {
     return (
@@ -74,33 +76,50 @@ export function AppContainer() {
     <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans pb-20 md:pb-0">
       {activeMission && <Battle ninjaObj={ninja} mission={activeMission} onEnd={handleBattleEnd} />}
       <LevelUpModal info={levelUpInfo} onClose={clearLevelUp} />
+      <StatsModal ninja={ninja} isOpen={isStatsModalOpen} onClose={() => setIsStatsModalOpen(false)} />
       
       {/* Navbar */}
-      <nav className="bg-neutral-900 border-b border-neutral-800 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <NinjaAvatar id={ninja.data.avatarId} size={40} className="rounded-lg" />
-            <div className="flex flex-col">
-              <span className="font-bold text-lg leading-tight">{ninja.data.name}</span>
-              <span className="text-xs text-red-400 font-semibold tracking-wide uppercase">
-                {`Clã ${ninja.data.clan} · `}{ninja.data.rank} · Aldeia da {ninja.data.village}
+      <nav className="bg-neutral-900 border-b border-neutral-800 sticky top-0 z-40 shadow-lg">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative cursor-pointer" onClick={() => setIsStatsModalOpen(true)}>
+              <div className="w-14 h-14 rounded-full border-2 border-neutral-700 overflow-hidden bg-neutral-800 flex items-center justify-center hover:border-neutral-500 transition-colors">
+                <NinjaAvatar id={ninja.data.avatarId} size={52} />
+              </div>
+              <div className="absolute -bottom-1 -right-1 bg-neutral-900 border border-neutral-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded flex items-center justify-center shadow-lg">
+                Nv. {ninja.data.level}
+              </div>
+            </div>
+            <div className="flex flex-col justify-center">
+              <span className="font-black text-xl leading-none mb-1 text-white">{ninja.data.name}</span>
+              <span className="text-xs text-neutral-400 font-semibold tracking-wide flex items-center gap-1.5 flex-wrap">
+                <span className="text-red-400">Clã {ninja.data.clan}</span>
+                <span className="w-1 h-1 rounded-full bg-neutral-700 hidden sm:block" />
+                <span className="text-blue-400">{ninja.data.rank}</span>
+                <span className="w-1 h-1 rounded-full bg-neutral-700 hidden sm:block" />
+                <span className="text-emerald-400">Aldeia da {ninja.data.village}</span>
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-4 sm:gap-6 text-sm">
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-neutral-400 text-xs">Nível {ninja.data.level}</span>
-              <div className="w-24 bg-neutral-800 h-1.5 rounded-full overflow-hidden mt-1">
-                <div className="bg-blue-500 h-full" style={{ width: `${(ninja.data.xp / ninja.data.xpToNextLevel) * 100}%` }}></div>
-              </div>
-            </div>
-            <div className="flex items-center text-yellow-500 font-bold">
-              <Coins className="w-4 h-4 mr-1" />
-              {ninja.data.ryo.toLocaleString()}
-            </div>
-            <button onClick={resetGame} title="Novo jogo" className="text-neutral-500 hover:text-red-400 transition-colors">
-              <RotateCcw className="w-4 h-4" />
-            </button>
+          <div className="flex flex-col items-end gap-2">
+             <div className="flex items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-1.5 text-yellow-500 font-bold bg-yellow-500/10 px-3 py-1.5 rounded-full border border-yellow-500/20 shadow-sm">
+                  <Coins className="w-4 h-4" />
+                  <span>{ninja.data.ryo.toLocaleString()} <span className="text-[10px] opacity-80 font-medium hidden sm:inline">Ryo</span></span>
+                </div>
+                <button onClick={resetGame} title="Novo Jogo" className="w-8 h-8 flex items-center justify-center rounded-full bg-neutral-800 text-neutral-400 hover:text-white hover:bg-red-500 transition-colors border border-neutral-700">
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+             </div>
+             <div className="hidden sm:flex items-center gap-2 w-48 group">
+                <div className="text-[10px] text-neutral-500 font-bold tracking-wider">XP</div>
+                <div className="flex-1 bg-neutral-800 h-2.5 rounded-full overflow-hidden border border-neutral-700 relative">
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-400 h-full transition-all duration-500 ease-out" style={{ width: `${(ninja.data.xp / ninja.data.xpToNextLevel) * 100}%` }}></div>
+                  <div className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-white/90 drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    {Math.floor(ninja.data.xp)} / {ninja.data.xpToNextLevel}
+                  </div>
+                </div>
+             </div>
           </div>
         </div>
       </nav>
