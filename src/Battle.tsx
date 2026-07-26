@@ -56,6 +56,9 @@ export default function Battle({ ninjaObj, mission, onEnd }: { ninjaObj: NinjaMo
   const [shake, setShake] = useState<"" | "foe" | "you">("");
   const [outcome, setOutcome] = useState<BattleOutcome | null>(null);
   const [weaponUses, setWeaponUses] = useState<Record<string, number>>({});
+  // Modos (jutsus "buff" com duração, ex: Sharingan, Portões, Instinto Hatake) usados nesta batalha
+  const [usedModes, setUsedModes] = useState<Set<string>>(new Set());
+  const isMode = (j: Jutsu) => j.kind === "buff" && !!j.buffTurns;
 
   const playerDefense = Math.round(ninjaObj.getTaijutsuStat() * 0.12 + ninja.level * 1.2) + Math.floor(ninja.stats.stamina / 5);
 
@@ -299,6 +302,17 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       addLog(`${isLee ? "Vigor" : "Chakra"} insuficiente para ${j.name}.`, "info");
       return;
     }
+
+    if (isMode(j)) {
+      if (usedModes.has(j.id)) {
+        addLog(`Você já usou ${j.name} nesta batalha!`, "info");
+        return;
+      }
+      if (activeBuffs.length > 0) {
+        addLog(`Você já tem um modo ativo! Espere ele acabar para ativar outro.`, "info");
+        return;
+      }
+    }
     
     let currentHp = pHp;
     if (j.healthCostPercent) {
@@ -352,6 +366,9 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
           next.push({ id: j.id, type: bType, turns: j.buffTurns ?? 3, amount: j.buffAmount ?? 0.5, name: j.name });
           return next;
         });
+        if (isMode(j)) {
+          setUsedModes(prev => new Set(prev).add(j.id));
+        }
         addLog(`Você usou ${j.name}! Modificador ativado por ${j.buffTurns ?? 3} turnos.`, "you");
       } else {
         addLog(`Você usou ${j.name}!`, "you");
@@ -564,23 +581,35 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
           ) : menu === "jutsu" ? (
             <div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1">
-                {knownJutsus.map((j) => (
-                  <button
-                    key={j.id}
-                    disabled={
-                      phase !== "player" ||
-                      (isLee ? pVigor : pChakra) < (j.chakraCost ?? 0)
-                    }
-                    onClick={() => useJutsu(j)}
-                    className="text-left p-3 rounded-lg border border-neutral-700 bg-neutral-800 hover:border-red-500 disabled:opacity-40 disabled:hover:border-neutral-700 transition-colors"
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="font-bold text-sm">{j.name}</span>
-                      <span className={`text-[10px] font-bold ${isLee ? "text-orange-400" : "text-blue-400"}`}>{j.chakraCost} {isLee ? "VG" : "CK"}</span>
-                    </div>
-                    <div className="text-[11px] text-neutral-400">{j.element} · {j.kind === "attack" ? `Poder ${j.power}` : j.kind === "heal" ? "Cura" : "Buff"}</div>
-                  </button>
-                ))}
+                {knownJutsus.map((j) => {
+                  const modeUsed = isMode(j) && usedModes.has(j.id);
+                  const modeBlocked = isMode(j) && !modeUsed && activeBuffs.length > 0;
+                  return (
+                    <button
+                      key={j.id}
+                      disabled={
+                        phase !== "player" ||
+                        (isLee ? pVigor : pChakra) < (j.chakraCost ?? 0) ||
+                        modeUsed ||
+                        modeBlocked
+                      }
+                      onClick={() => useJutsu(j)}
+                      className="text-left p-3 rounded-lg border border-neutral-700 bg-neutral-800 hover:border-red-500 disabled:opacity-40 disabled:hover:border-neutral-700 transition-colors"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-sm">{j.name}</span>
+                        <span className={`text-[10px] font-bold ${isLee ? "text-orange-400" : "text-blue-400"}`}>{j.chakraCost} {isLee ? "VG" : "CK"}</span>
+                      </div>
+                      <div className="text-[11px] text-neutral-400">
+                        {modeUsed
+                          ? "Já usado nesta batalha"
+                          : modeBlocked
+                          ? "Outro modo já está ativo"
+                          : `${j.element} · ${j.kind === "attack" ? `Poder ${j.power}` : j.kind === "heal" ? "Cura" : "Buff"}`}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
               <BackBtn onClick={() => setMenu("root")} />
             </div>
