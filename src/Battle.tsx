@@ -11,6 +11,9 @@ type Menu = "root" | "jutsu" | "item" | "attack";
 
 const variance = () => 0.85 + Math.random() * 0.3;
 
+// 5% base, sobe até 60% conforme a velocidade
+const calcDodgeChance = (speed: number) => Math.min(0.6, 0.05 + speed * 0.0037);
+
 type ActiveBuff = {
   id: string;
   type: "ocular" | "gate" | "general";
@@ -190,7 +193,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
       setTempShield(0);
     }
     
-    const playerDodgeChance = Math.min(0.8, 0.5 + (ninjaObj.getSpeedStat() * 0.001));
+    const playerDodgeChance = calcDodgeChance(ninjaObj.getSpeedStat());
     if (Math.random() < playerDodgeChance) {
       addLog(`${enemy.name} usou ${move.name}, mas você se esquivou!`, "you");
       setPhase("player");
@@ -273,7 +276,7 @@ const calcPlayerDamage = (scaling: keyof NinjaData["stats"], power: number, crit
     }
 
     const { dmg, crit } = calcPlayerDamage(scaling, power, 6, customStatVal);
-    const enemyDodgeChance = Math.min(0.8, 0.5 + (enemy.speed * 0.001));
+    const enemyDodgeChance = calcDodgeChance(enemy.speed);
     if (Math.random() < enemyDodgeChance) {
       addLog(`Você ${name}, mas ${enemy.name} se esquivou!`, "foe");
       afterPlayer(eHp, pHp, pChakra, pVigor, usedItems);
